@@ -1,0 +1,51 @@
+%=====================================================
+% Chapter 0: Topic
+%=====================================================
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape \leftmark}
+\fancyhead[LO]{\slshape \leftmark}
+\fancyfoot{\companyfooter}
+
+ \section*{Discussion Question}
+ 
+ \begin{quote}
+ 
+ %<content>%
+
+ The international accounting profession has lost its way and is no longer
+ serving the needs of different users of accounting information in a manner
+ which is appropriate and meaningful for the global business environment of
+ today. Do you agree or disagree?
+
+\begin{enumerate}
+  \item 
+Identify the different user groups who require
+accounting information and explain how this information is provided for them.
+\item 
+Discuss how the status of the accounting profession, both in your country and
+internationally, has been impacted by financial scandals in the recent past and
+\item 
+describe what measures have been taken to counterbalance the impact of these.
+\item 
+Do you think that the measures have been successful?
+\end{enumerate} 
+
+%</content>%
+ \end{quote}    
+ 
+\section*{Discussion Question Answer}
+
+
+%=====================================================
+% Include Content and Appendices
+%=====================================================
+
+\input{chapter_01}
+\input{chapter_02}
+\input{chapter_03}
+\input{chapter_04}
+\input{chapter_05}
+\input{cfg/zz_appendices} 

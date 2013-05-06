@@ -1,0 +1,61 @@
+%=====================================================
+% Load the main layout file
+%=====================================================
+\input{cfg/zz_layout}
+
+%=====================================================
+% Configuration of the Bibliography.
+%
+% Has to be in the main document because of a limitation of TeXlipse
+%
+% http://sourceforge.net/projects/texlipse/forums/forum/451977/topic/4614646
+%
+% Some configuration taken from:
+%
+% http://www.khirevich.com/latex/biblatex/
+%
+% For sample ways how to cite see:
+%
+% http://ads.harvard.edu/pubs/bibtex/astronat/doc/html/astronat_3.html
+%=====================================================
+ 
+\usepackage[style=apa,citestyle=authoryear,backend=biber,maxnames=3,minnames=1,sorting=nyt,sortcites=true,block=space,safeinputenc,natbib=true,backref=true,uniquename=init]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+\addbibresource{Bibliography.bib}  
+\input{cfg/zz_config_bib}
+
+   
+%=====================================================
+% Document Content
+%=====================================================
+%\includeonly{titlepage,mgmtsummary,distribution,listofs,chapter0,chapter1,chapter2,chapter3}
+%\includeonly{chapter0,chapter1,chapter2,chapter3}
+\makeindex
+\usepackage{microtype}
+
+
+\begin{document}  
+
+
+
+%\frontmatter
+  \include{00_titlepage}
+%  \pagenumbering{Roman}
+  %\include{begin_01_mgmtsummary}
+  %\include{begin_02_distribution}
+  %\include{begin_03_listofs}
+%\mainmatter
+%\pagenumbering{arabic}
+%\part{Performance}\label{part:Performance}
+    \include{chapter_00} 
+ %   \include{chapter_01} 
+%\part{Installation}\label{part:Installation}  
+%    \include{chapter_02} 
+%    \include{chapter_03} 
+%    \include{chapter_04} 
+%   \include{chapter_05} 
+%   \include{chapter_06} 
+%   \include{chapter_07} 
+%   \include{chapter_08} 
+%   \include{chapter_09} 
+\end{document}

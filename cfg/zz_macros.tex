@@ -1,0 +1,105 @@
+%=====================================================
+% Makros
+%=====================================================
+
+%-----------------------------------------------------
+% Simple Substitutions:
+%-----------------------------------------------------
+
+\def\ni{\noindent}
+\def\usw{$[\dots]$}
+\def\daher{$\rightarrow$}
+\def\tab{\hspace{2 cm}}
+\def\fn{\footnote}
+\def\en{\endnote}
+\def\Unterschrift{\newline \includegraphics[width=4cm]{unter} \newline}
+\def\unterschrift{\Unterschrift}
+\newcommand{\bs}{$\backslash$}
+ 
+%-----------------------------------------------------
+% dangerous / ddangerous etc. environments a la Knuth: 
+%-----------------------------------------------------
+
+\font\manual=manfnt
+\def\dbend{{\manual\char127}}
+\def\d@nger{\medbreak\begingroup\clubpenalty=10000
+  \def\par{\endgraf\endgroup\medbreak}  
+\noindent\hang\hangafter=-2  \hbox 
+to0pt{\hskip-\hangindent\dbend\hfill}\ninepoint}
+\outer\def\danger{\d@nger}
+\def\dd@nger{\medbreak\begingroup\clubpenalty=10000
+  \def\par{\endgraf\endgroup\medbreak} 
+\noindent\hang\hangafter=-2  \hbox 
+to0pt{\hskip-
+\hangindent\dbend\kern1pt\dbend\hfill}\ninepoint} 
+\outer\def\ddanger{\dd@nger}
+\def\enddanger{\endgraf\endgroup}
+
+\newsavebox{\fmbox}
+\newenvironment{notdangerous}
+{
+ \begin{lrbox}{\fmbox}
+ \begin{minipage}[t]{1cm}~\end{minipage}
+ \begin{minipage}[t]{1.5cm}\hspace{\fill}~\end{minipage}
+ \begin{minipage}[t]{0.1cm}~\end{minipage}
+ \begin{minipage}[t]{12.5cm}
+}
+{\end{minipage}\end{lrbox}\usebox{\fmbox}
+}
+\newenvironment{dangerous}
+{
+ \begin{lrbox}{\fmbox}
+ \begin{minipage}[t]{0.2cm}~\end{minipage}
+ \begin{minipage}[t]{1.5cm}\hspace{\fill}\dbend\end{minipage}
+ \begin{minipage}[t]{0.1cm}~\end{minipage}
+ \begin{minipage}[t]{10.8cm}
+}
+{\end{minipage}\end{lrbox}\usebox{\fmbox}
+}
+\newenvironment{ddangerous}
+{
+ \begin{lrbox}{\fmbox}
+ \begin{minipage}[t]{0.2cm}~\end{minipage}
+ \begin{minipage}[t]{1.5cm}\hspace{\fill}\dbend\dbend\end{minipage}
+ \begin{minipage}[t]{0.1cm}~\end{minipage}
+ \begin{minipage}[t]{10.8cm}
+}
+{\end{minipage}\end{lrbox}\usebox{\fmbox}
+}
+\newenvironment{dddangerous}
+{
+ \begin{lrbox}{\fmbox}
+ \begin{minipage}[t]{0.2cm}~\end{minipage}
+ \begin{minipage}[t]{1.5cm}\hspace{\fill}\dbend\dbend\dbend\end{minipage}
+ \begin{minipage}[t]{0.1cm}~\end{minipage}
+ \begin{minipage}[t]{10.8cm}
+}
+{\end{minipage}\end{lrbox}\usebox{\fmbox}
+}
+
+%-----------------------------------------------------
+% Other environments:
+%-----------------------------------------------------
+
+\newcommand{\companyfooter} {
+\vspace*{0.2cm}
+\setlength{\tabcolsep}{0.05cm}
+\tiny
+\centerline{
+\begin{tabular}{p{1.5cm}p{4.5cm}p{6.0cm}p{0.5cm}p{2.96cm}}
+\toprule[0.25pt]
+\makebox[1.50cm][l]{Module:} &
+\makebox[4.50cm][l]{\mnbook}&
+\makebox[6.00cm][c]{\mnname}&
+\makebox[0.50cm][l]{$\:$Date:}&
+\makebox[2.96cm][r]{\today}
+\\%\midrule[0.15pt]
+\makebox[1.50cm][l]{Document:} &
+\makebox[4.50cm][l]{\mnsubtitle}&
+\makebox[6.00cm][c]{\mnsubsubtitle\ (\mnmoduleweek)}&
+\makebox[0.50cm][l]{$\:$Version:}&
+\makebox[2.96cm][r]{\mnversion}
+\\
+\bottomrule[0.25pt]
+\end {tabular}
+}}

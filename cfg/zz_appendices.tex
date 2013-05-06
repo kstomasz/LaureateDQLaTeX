@@ -1,0 +1,132 @@
+%=====================================================
+% Chapter 99: Appendices
+%=====================================================
+
+%=====================================================
+% Word Count
+%=====================================================
+
+\bigskip \hfill \emph{\wordcount} \emph{Words} excluding question, notes and references.\bigskip
+
+
+%=====================================================
+% Appendix
+%=====================================================
+
+% \part{Appendix}
+\appendix
+
+%=====================================================
+% End Notes
+%=====================================================
+
+\phantomsection
+\addcontentsline{toc}{section}{Notes}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape NOTES}
+\fancyhead[LO]{\slshape NOTES}
+\fancyfoot[C]{}
+%\theendnotes \setcounter{endnote}{0}
+\printendnotes 
+%\setcounter{endnote}{0}
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+
+
+
+
+%=====================================================
+% Acronyms and Symbols
+%=====================================================
+
+\phantomsection
+\addcontentsline{toc}{section}{Acronyms and Symbols}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape ACRONYMS AND SYMBOLS}
+\fancyhead[LO]{\slshape ACRONYMS AND SYMBOLS}
+\fancyfoot[C]{}
+%\printacronym
+%\printglossary[type=\acronymtype]
+%Print list of acronyms
+%\deftranslation[to=German]{Acronyms}{Abkürzungsverzeichnis}
+\printglossary[type=\acronymtype,style=long]
+%Print list of symbols
+\printglossary[type=symbolslist,style=long]
+
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+
+
+%=====================================================
+% Glossary
+%=====================================================
+
+\phantomsection
+\addcontentsline{toc}{section}{Glossary}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape GLOSSARY}
+\fancyhead[LO]{\slshape GLOSSARY}
+\fancyfoot[C]{}
+%\printglossary
+%\printglossary[type=main]
+\printglossary[style=altlist,title=Glossary]
+
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+
+
+%=====================================================
+% Index
+%=====================================================
+
+% Usage:
+% \index{Fourier Series}
+
+%
+% Index comes with a plain page style, we hack it here so that we have
+% the same pagestyle as everywhere else.
+% 
+\patchcmd{\theindex}% <cmd>
+  {\thispagestyle{plain}}% <search>
+  {\pagestyle{indexstyle}}% <replace>
+  {}{}%
+  \fancypagestyle{indexstyle}{%
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape INDEX}
+\fancyhead[LO]{\slshape INDEX}
+\fancyfoot[C]{}
+ }
+\renewcommand{\indexname}{Index}%
+
+\phantomsection
+\addcontentsline{toc}{section}{Index}
+\printindex
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+
+
+%=====================================================
+% References
+%=====================================================
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape REFERENCES}
+\fancyhead[LO]{\slshape REFERENCES}
+\fancyfoot[C]{}
+%\begin{thebibliography}{99}
+\printbibliography
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+
+
