@@ -312,7 +312,9 @@ submit : check
 clean :
 	echo make clean; \
   for i in $(tex-files); do \
-    find . -iname "$$i" -print0 | xargs -0 rm -f; \
+    for f in `find . -name "$$i"|grep -v .git`; do \
+      rm -f $$f;\
+    done;\
   done; \
   mkdir -p tmp; \
   if find tmp/ -maxdepth 0 -type f | read; then rm tmp/*; fi; \
