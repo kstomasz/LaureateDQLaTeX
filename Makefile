@@ -58,7 +58,6 @@ init :  check clean
 .PHONY: pdf
 pdf : check pdflatex
 	echo make pdf; \
-  echo $$(pwd); \
   open document.pdf
 
 
@@ -75,9 +74,9 @@ pdflatex : check
 	export FORMAT=pdf; \
 	export DEST=tmp; \
   if [ "$$verbose" == "1" ] ; then \
-    yes x | pdflatex -interaction=nonstopmode -output-directory=$$DEST document; \
+    yes x | pdflatex -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document; \
   else \
-    yes x | pdflatex -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
+    yes x | pdflatex -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
   fi; \
   remake=0; \
   if grep -Fq "No file document.acr" $$DEST/document.log; then $(MAKE) acronyms; remake=1; fi; \
@@ -88,7 +87,8 @@ pdflatex : check
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
   if [ -f document.blg ]; then mv document.blg tmp/; fi; \
-  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;
+  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;\
+  if [ -f tmp/document.synctex.gz ]; then mv tmp/document.synctex.gz .; fi;
 
 
 #################################################
@@ -356,7 +356,6 @@ tex-files =	\
 	*.slg	\
 	*.syg	\
 	*.syi	\
-	*.synctex.gz	\
 	*.tmp	\
 	*.toc	\
 	*.xref \
