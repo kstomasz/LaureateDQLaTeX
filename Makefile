@@ -87,6 +87,7 @@ pdflatex : check
   if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
+  if [ -f document.blg ]; then mv document.blg tmp/; fi; \
   if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;
 
 
