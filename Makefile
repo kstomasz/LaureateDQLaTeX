@@ -87,7 +87,7 @@ pdflatex : check
   if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
-  mv tmp/document.pdf .;
+  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;
 
 
 #################################################
@@ -217,6 +217,7 @@ biber : check
   else \
     biber --output_directory=$$DEST document >/dev/null 2>&1; \
   fi; \
+  if [ -f document.blg ]; then mv document.blg tmp/; fi; \
   if grep -Fq "pdfTeX warning (dest): name{acn:" $$DEST/document.log; then $(MAKE) acronyms; fi; \
   if grep -Fq "pdfTeX warning (dest): name{glo:" $$DEST/document.log; then $(MAKE) glossary; fi; \
   if grep -Fq "pdfTeX warning (dest): name{syg:" $$DEST/document.log; then $(MAKE) symbols;  fi; \
