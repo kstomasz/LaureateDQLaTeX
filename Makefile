@@ -20,8 +20,8 @@ check :
 	if [ $(MAKELEVEL) -gt 20 ]; then \
 	  echo "Maximum recursion level reached. Aborting."; \
 	  exit 1; \
-	fi;
-
+	fi;\
+  mkdir -p tmp; 
 
 all : clean submit
 
@@ -31,7 +31,7 @@ all : clean submit
 #
 #################################################
 
-
+TEXBIN=/usr/texbin/
 
 #################################################
 # 
@@ -58,7 +58,7 @@ init :  check clean
 .PHONY: pdf
 pdf : check pdflatex
 	echo make pdf; \
-  mv tmp/document.pdf .; \
+  echo $$(pwd); \
   open document.pdf
 
 
@@ -71,6 +71,7 @@ pdf : check pdflatex
 .PHONY: pdflatex
 pdflatex : check
 	echo make pdflatex; \
+  export PATH=$$TEXBIN:$$PATH; \
 	export FORMAT=pdf; \
 	export DEST=tmp; \
   if [ "$$verbose" == "1" ] ; then \
@@ -85,7 +86,8 @@ pdflatex : check
   if grep -Fq "No file document.ind" $$DEST/document.log; then $(MAKE) index;    remake=1; fi; \
   if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
-  if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi
+  if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
+  mv tmp/document.pdf .;
 
 
 #################################################
@@ -312,8 +314,9 @@ clean :
   for i in $(tex-files); do \
     find . -iname "$$i" -print0 | xargs -0 rm -f; \
   done; \
+  mkdir -p tmp; \
   if find tmp/ -maxdepth 0 -type f | read; then rm tmp/*; fi; \
-  touch tmp/document.ent
+  touch tmp/document.ent;
 
 tex-files =	\
 	*.4ct	\
