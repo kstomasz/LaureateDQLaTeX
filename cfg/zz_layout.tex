@@ -141,14 +141,18 @@ section]         %use section level for toc entries
   {\@gls@link[#1,hyper=false]{#2}{\@glo@text}}
   {}{}
 \patchcmd{\@glspl@}
-  {\@glspl@link[#1]{#2}{\@glo@text}}
-  {\@glspl@link[#1,hyper=false]{#2}{\@glo@text}}
+  {\@gls@link[#1]{#2}}
+  {\@gls@link[#1,hyper=false]{#2}}
   {}{}
 \patchcmd{\@Gls@}
   {\@gls@link[#1]{#2}}
   {\@gls@link[#1,hyper=false]{#2}}
   {}{}
-\patchcmd{\@GLS@}
+\patchcmd{\@Glspl@}
+  {\@gls@link[#1]{#2}}
+  {\@gls@link[#1,hyper=false]{#2}}
+  {}{}
+  \patchcmd{\@GLS@}
   {\@gls@link[#1]{#2}{\MakeUppercase{\@glo@text}}}
   {\@gls@link[#1,hyper=false]{#2}{\MakeUppercase{\@glo@text}}}
   {}{}  
