@@ -160,6 +160,11 @@ section]         %use section level for toc entries
 \newglossary[slg]{symbolslist}{syi}{syg}{List of Symbols}
 
 %
+% Make sure first character of glossary entry name is uppercase
+%
+\renewcommand{\glsnamefont}[1]{\makefirstuc{#1}}
+
+%
 % Remove the dot at the end of glossary descriptions
 %
 \renewcommand*{\glspostdescription}{}
