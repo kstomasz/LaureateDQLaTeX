@@ -211,13 +211,13 @@ biber : check
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.log ]; then  \
     $(MAKE) $(FORMAT)latex; \
-  fi; \
+  fi;
 	if [ "$$verbose" == "1" ] ; then \
     biber --output_directory=$$DEST document; \
   else \
     biber --output_directory=$$DEST document >/dev/null 2>&1; \
-  fi; \
-  if [ -f document.blg ]; then mv document.blg tmp/; fi; \
+  fi; 
+	if [ -f document.blg ]; then mv document.blg tmp/; fi; \
   if grep -Fq "pdfTeX warning (dest): name{acn:" $$DEST/document.log; then $(MAKE) acronyms; fi; \
   if grep -Fq "pdfTeX warning (dest): name{glo:" $$DEST/document.log; then $(MAKE) glossary; fi; \
   if grep -Fq "pdfTeX warning (dest): name{syg:" $$DEST/document.log; then $(MAKE) symbols;  fi; \
