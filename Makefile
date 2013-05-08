@@ -41,7 +41,11 @@ all : clean submit
 
 .PHONY: init
 init :  check clean
-	for i in chapter*tex; do perl -pi -e 'BEGIN{undef $$/};s#(.*?%\s*?<content>\s*?%).*?(%\s*?</content>\s*?%.*)#\1\n\n\n\n\2\n\n#ms' $$i; done
+	PROJ=$$(basename "$$(pwd)"); \
+  echo Initializing $$PROJ; \
+  perl -pi -e "BEGIN{undef $$/};s#(<projectDescription.*?<name>)(.*?)(</name>)#\1$${PROJ}\3#ms" .project; \
+	for i in chapter*tex; do perl -pi -e 'BEGIN{undef $$/};s#(.*?%\s*?<content>\s*?%).*?(%\s*?</content>\s*?%.*)#\1\n\n\n\n\2\n\n#ms' $$i; done ; \
+  rm Bibliography.bib ; ln -s ../../../../Papers/Bibliography.bib
 
 
 
