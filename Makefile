@@ -277,7 +277,9 @@ wc : check
   cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Assignment\}.*?\\section\*\{Assignment Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
   mv chapter_00.new chapter_00.tex;\
   \
-  $(MAKE) pdflatex; \
+  if [ "$$fromtex" != "1" ] ; then \
+    $(MAKE) pdflatex; \
+  fi;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
   if [ "$$verbose" == "1" ] ; then \
@@ -298,7 +300,9 @@ wc : check
   cp -a sav/* . >/dev/null 2>&1;\
   rm -rf sav >/dev/null 2>&1; \
   for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
-
+  if [ "$$fromtex" == "1" ] ; then \
+    rm -f tmp/document.glo;\
+  fi;\
 
 
 #################################################
