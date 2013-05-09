@@ -108,7 +108,7 @@ htlatex : check
   fi; \
 	export FORMAT=ht; \
   for i in $(tex-files); do if [ -f "tmp/$$i" ]; then cp -a tmp/$$i . >/dev/null 2>&1; fi; done; \
-	export DEST=.; \
+	export DEST=tmp; \
   if [ "$$verbose" == "1" ] ; then \
     yes x | htlatex document.tex "cfg/myconfig.cfg"; \
   else \
@@ -362,7 +362,8 @@ submit : check
   cp -a fig tmp >/dev/null 2>&1;\
   open tmp/document.html;\
   cp -a sav_submit/* . >/dev/null 2>&1;\
-  rm -rf sav_submit >/dev/null 2>&1;
+  rm -rf sav_submit >/dev/null 2>&1; \
+  for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
 
 
 
