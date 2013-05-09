@@ -90,9 +90,9 @@ pdflatex : check
   if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
-  if [ -f document.blg ]; then mv document.blg tmp/; fi; \
-  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;\
-  if [ -f tmp/document.synctex.gz ]; then mv tmp/document.synctex.gz .; fi;
+  if [ -f document.blg ]; then mv document.blg $$DEST/; fi; \
+  if [ -f $$DEST/document.pdf ]; then mv $$DEST/document.pdf .; fi;\
+  if [ -f $$DEST/document.synctex.gz ]; then mv $$DEST/document.synctex.gz .; fi;
 
 
 #################################################
@@ -147,14 +147,17 @@ acronyms : check
 	if [ "$$silent" != "1" ] ; then \
     echo make acronyms; \
   fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $(FORMAT)latex; \
+    $(MAKE) $${FORMAT}latex; \
   fi; \
-	if [ "$$verbose" == "1" ] ; then \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn; \
-  else \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn >/dev/null 2>&1; \
+  if [ -f $$DEST/document.acn ] ; then \
+  	if [ "$$verbose" == "1" ] ; then \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn; \
+    else \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn >/dev/null 2>&1; \
+    fi; \
   fi;
 
 #################################################
@@ -168,14 +171,17 @@ glossary : check
 	if [ "$$silent" != "1" ] ; then \
     echo make glossary; \
   fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $(FORMAT)latex; \
+    $(MAKE) $${FORMAT}latex; \
   fi; \
-	if [ "$$verbose" == "1" ] ; then \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo; \
-  else \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo >/dev/null 2>&1; \
+  if [ -f $$DEST/document.glo ] ; then \
+  	if [ "$$verbose" == "1" ] ; then \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo; \
+    else \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo >/dev/null 2>&1; \
+    fi; \
   fi;
 
 
@@ -190,14 +196,17 @@ symbols : check
 	if [ "$$silent" != "1" ] ; then \
     echo make symbols; \
   fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
+	if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $(FORMAT)latex; \
+    $(MAKE) $${FORMAT}latex; \
   fi; \
-	if [ "$$verbose" == "1" ] ; then \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg; \
-  else \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg >/dev/null 2>&1; \
+  if [ -f $$DEST/document.syg ] ; then \
+	  if [ "$$verbose" == "1" ] ; then \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg; \
+    else \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg >/dev/null 2>&1; \
+    fi; \
   fi;
 
 
@@ -212,14 +221,17 @@ index : check
 	if [ "$$silent" != "1" ] ; then \
     echo make index; \
   fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
+	if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
+  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $(FORMAT)latex; \
+    $(MAKE) $${FORMAT}latex; \
   fi; \
-	if [ "$$verbose" == "1" ] ; then \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx; \
-  else \
-    makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx >/dev/null 2>&1; \
+  if [ -f $$DEST/document.idx ] ; then \
+	  if [ "$$verbose" == "1" ] ; then \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx; \
+    else \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx >/dev/null 2>&1; \
+    fi; \
   fi;
 
 
@@ -301,7 +313,7 @@ wc : check
   rm -rf sav >/dev/null 2>&1; \
   for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
   if [ "$$fromtex" == "1" ] ; then \
-    rm -f tmp/document.glo;\
+    rm -f tmp/document.ist tmp/document.glg tmp/document.gls tmp/document.glo;\
   fi;\
 
 
