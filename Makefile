@@ -256,9 +256,9 @@ wc : check
   cat $$DEST/document.html | perl -pi -e 's/\\relax//g' > document2.html; \
   mv document2.html document.html; \
   if [ "$$verbose" == "1" ] ; then \
-    python /pgm/scripts/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm"; \
+    python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm"; \
   fi; \
-  python /pgm/scripts/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w; \
+  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w; \
   cp -a sav/* . >/dev/null 2>&1;\
   rm -rf sav >/dev/null 2>&1; \
   for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
