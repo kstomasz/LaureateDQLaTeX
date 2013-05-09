@@ -3,3 +3,4 @@
 *.swp
 document.pdf
 tmp/*
+document.synctex.gz
