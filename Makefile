@@ -57,7 +57,9 @@ init :  check clean
 
 .PHONY: pdf
 pdf : check pdflatex
-	echo make pdf; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make pdf; \
+  fi; \
   open document.pdf
 
 
@@ -69,14 +71,16 @@ pdf : check pdflatex
 
 .PHONY: pdflatex
 pdflatex : check
-	echo make pdflatex; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make pdflatex; \
+  fi; \
   export PATH=$$TEXBIN:$$PATH; \
 	export FORMAT=pdf; \
 	export DEST=tmp; \
   if [ "$$verbose" == "1" ] ; then \
-    yes x | pdflatex -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document; \
+    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document; \
   else \
-    yes x | pdflatex -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
+    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
   fi; \
   remake=0; \
   if grep -Fq "No file document.acr" $$DEST/document.log; then $(MAKE) acronyms; remake=1; fi; \
@@ -99,7 +103,9 @@ pdflatex : check
 
 .PHONY: htlatex
 htlatex : check
-	echo make htlatex; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make htlatex; \
+  fi; \
 	export FORMAT=ht; \
   for i in $(tex-files); do if [ -f "tmp/$$i" ]; then cp -a tmp/$$i . >/dev/null 2>&1; fi; done; \
 	export DEST=.; \
@@ -107,6 +113,15 @@ htlatex : check
     yes x | htlatex document.tex "cfg/myconfig.cfg"; \
   else \
     yes x | htlatex document.tex "cfg/myconfig.cfg" >/dev/null 2>&1; \
+  fi; \
+  if [ "$$verbose" == "1" ] ; then \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/ ;\
+    t4ht -f/document.tex document -dtmp/ -m644 ;\
+  else \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST  >/dev/null 2>&1 ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/  >/dev/null 2>&1 ;\
+    t4ht -f/document.tex document -dtmp/ -m644 >/dev/null 2>&1  ;\
   fi; \
   if grep -Fq "No file document.acr" $$DEST/document.log; then $(MAKE) acronyms; remake=1; fi; \
   if grep -Fq "No file document.gls" $$DEST/document.log; then $(MAKE) glossary; remake=1; fi; \
@@ -129,7 +144,9 @@ htlatex : check
 
 .PHONY: acronyms
 acronyms : check 
-	echo make acronyms; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make acronyms; \
+  fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
     $(MAKE) $(FORMAT)latex; \
@@ -148,7 +165,9 @@ acronyms : check
 
 .PHONY: glossary
 glossary : check
-	echo make glossary; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make glossary; \
+  fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
     $(MAKE) $(FORMAT)latex; \
@@ -168,7 +187,9 @@ glossary : check
 
 .PHONY: symbols
 symbols : check 
-	echo make symbols; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make symbols; \
+  fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
     $(MAKE) $(FORMAT)latex; \
@@ -188,7 +209,9 @@ symbols : check
 
 .PHONY: index
 index : check
-	echo make index; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make index; \
+  fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.ist ]; then  \
     $(MAKE) $(FORMAT)latex; \
@@ -208,7 +231,9 @@ index : check
 
 .PHONY: biber
 biber : check
-	echo make biber; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make biber; \
+  fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ ! -f $$DEST/document.log ]; then  \
     $(MAKE) $(FORMAT)latex; \
@@ -233,10 +258,13 @@ biber : check
 
 .PHONY: wc
 wc : check
-	echo make wc; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make wc; \
+  fi; \
+  if [ -f tmp/wc.tex ] ; then if [ -s tmp/wc.tex ] ; then if [ "$$(cat tmp/wc.tex)" != "." ] ; then cat tmp/wc.tex; exit ; fi ; fi ; fi; \
 	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
   if [ -d sav ]; then\
-    echo Directory sav exists - exiting.;\
+    if [ "$$silent" == "1" ] ; then echo "."; else echo "Directory sav exists; exiting."; fi;\
     exit 1;\
   fi;\
   \
@@ -252,13 +280,21 @@ wc : check
   $(MAKE) pdflatex; \
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
-  $(MAKE) htlatex; \
+  if [ "$$verbose" == "1" ] ; then \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/ ;\
+    t4ht -f/document.tex document -dtmp/ -m644 ;\
+  else \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST  >/dev/null 2>&1 ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/  >/dev/null 2>&1 ;\
+    t4ht -f/document.tex document -dtmp/ -m644 >/dev/null 2>&1  ;\
+  fi; \
   cat $$DEST/document.html | perl -pi -e 's/\\relax//g' > document2.html; \
   mv document2.html document.html; \
   if [ "$$verbose" == "1" ] ; then \
     python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm"; \
   fi; \
-  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w; \
+  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)([0-9]*? Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | tail -c +2 | wc -w | sed 's/ //g'; \
   cp -a sav/* . >/dev/null 2>&1;\
   rm -rf sav >/dev/null 2>&1; \
   for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
@@ -273,14 +309,16 @@ wc : check
 
 .PHONY: submit
 submit : check
-	echo make submit; \
-  if [ -d sav ]; then\
-    echo Directory sav exists - exiting.;\
+	if [ "$$silent" != "1" ] ; then \
+    echo make submit; \
+  fi; \
+  if [ -d sav_submit ]; then\
+    echo Directory sav_submit exists - exiting.;\
     exit 1;\
   fi;\
   \
-  mkdir sav;\
-  cp -av *tex sav >/dev/null 2>&1;\
+  mkdir sav_submit;\
+  cp -av *tex sav_submit >/dev/null 2>&1;\
   \
   cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Discussion Question\}.*?\\section\*\{Discussion Question Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
   mv chapter_00.new chapter_00.tex;\
@@ -289,18 +327,26 @@ submit : check
   mv chapter_00.new chapter_00.tex;\
   \
   $(MAKE) pdflatex; \
-  mv tmp/document.pdf .; \
+  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf .; fi;\
   cp -a document.pdf ~/Desktop >/dev/null 2>&1;\
   open ~/Desktop/document.pdf;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
-  $(MAKE) htlatex; \
+  if [ "$$verbose" == "1" ] ; then \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/ ;\
+    t4ht -f/document.tex document -dtmp/ -m644 ;\
+  else \
+    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST  >/dev/null 2>&1 ; \
+    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/  >/dev/null 2>&1 ;\
+    t4ht -f/document.tex document -dtmp/ -m644 >/dev/null 2>&1  ;\
+  fi; \
   cat tmp/document.html | perl -pi -e 'BEGIN{undef$$/};s%(.*)(<html.*?<body.*?>)(.*)%$$2<br/><span class="cmr-10">For a well-formatted version, see attached document (link above).</span><br/><br/>$$3%s' > tmp/document_submitted.html;\
   mv tmp/document_submitted.html tmp/document.html;\
   cp -a fig tmp >/dev/null 2>&1;\
   open tmp/document.html;\
-  cp -a sav/* . >/dev/null 2>&1;\
-  rm -rf sav >/dev/null 2>&1;
+  cp -a sav_submit/* . >/dev/null 2>&1;\
+  rm -rf sav_submit >/dev/null 2>&1;
 
 
 
@@ -312,7 +358,10 @@ submit : check
 
 .PHONY: clean
 clean :
-	echo make clean; \
+	if [ "$$silent" != "1" ] ; then \
+    echo make clean; \
+  fi; \
+  if [ -f tmp/wc.tex ] ; then rm tmp/wc.tex; fi; \
   for i in $(tex-files); do \
     for f in `find . -name "$$i"|grep -v .git`; do \
       rm -f $$f;\
