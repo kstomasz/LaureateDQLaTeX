@@ -31,16 +31,21 @@
 
 %<content>%
 
+%------------------------------------------------------------------------------------------------------------------------
 
 \newglossaryentry{glos:sox}{
  name=Sarbanes--Oxley Act,
  description={``An act to protect investors by improving the accuracy and reliability of corporate disclosures July 30, 2002 made pursuant to the securities laws, and for other purposes''  \citep[1]{United-States-Government:2002vn}, the Sarbanes--Oxley Act brought several new regluations such as that the CEO and CFO are required to certify the accuracy of corporate financial reports which have published timely along with reports on the effectiveness of the company's internal control structures and financial reporting procedures.}}
+
+%------------------------------------------------------------------------------------------------------------------------
 
 \newglossaryentry{glos:sme}{
 name=Small and Medium Enterprise,
 description={Company whose personnel number falls under
 certain thresholds, typically in the range of maximum 100--250
 people, depending on the jurisdiction.}}
+
+%------------------------------------------------------------------------------------------------------------------------
 
 \def\descstakeholder{According to \citeauthor{Donaldson:1995uq}, anyone
 who has a ``stake, (i.e., potential benefit)''  (\citeyear[86]{Donaldson:1995uq}), in the 
@@ -71,6 +76,8 @@ description={According to \citeauthor{Kolb:2008fk},
 ``the theory of agency seeks to explain why and how service and control can succeed or fail \dots One actor, the agent, is modeled as acting for another, the principal. \dots The actor's problems focus on serving
 [or not] the principal; the principal's problems generally entail dilemmas of how to assure that the agent will do what the principal wants him or her to do.'' (\citeyear[42]{Kolb:2008fk})}}
 
+%------------------------------------------------------------------------------------------------------------------------
+
 \def\glosdescifrs{International Financial Reporting Standards (IFRS) are designed as a common global language for business affairs so that company accounts are understandable and comparable across international boundaries. They are a consequence of growing international shareholding and trade and are particularly important for companies that have dealings in several countries. They are progressively replacing the many different national accounting standards.The rules to be followed by accountants to maintain books of accounts which is comparable, understandable, reliable and relevant as per the users internal or external.}
 \newglossaryentry{glos:ifrs}{
   name=International Financial Reporting Standard (IFRS),
@@ -95,6 +102,8 @@ description={According to \citeauthor{Kolb:2008fk},
   description={\glosdescxbrl}
 }
 
+%------------------------------------------------------------------------------------------------------------------------
+
 \def\glosdescaccrualsaccounting{``Accruals accounting is preparing the income statement and statement of financial position following the \gls{glos:accrualsconvention}, which says that profit = revenue - expenses (not cash receipts - cash payments).'' \citep[107]{Atrill:2011qy}}
 \newglossaryentry{glos:accrualsaccounting}{
   name=accruals accounting,
@@ -113,11 +122,52 @@ not the excess of cash receipts over cash payments.'' \citep[632]{Atrill:2010ys}
   description={\glosdescaccrualsconvention}
 }
 
+%------------------------------------------------------------------------------------------------------------------------
+
+\def\glosdesccurrentratio{According to \citeauthor{Atrill:2010ys}, ``the
+current ratio compares the `liquid' asssets \dots\, of the business with the
+current liabilities. The ratio is calculated as:''
+
+\begin{equation}
+  \text{Current ratio} = \frac{\text{Current assets}}{\text{Current liabilities}}
+\end{equation}
+
+It should ideally have a value around 2  (\citeyear[160]{Atrill:2010ys}).
+}
+\newglossaryentry{glos:currentratio}{
+  name=current ratio,
+  firstplural=current ratios,
+  plural=current ratios,
+  description={\glosdesccurrentratio}
+}
+
+
+\def\glosdescacidtestratio{
+According to \citeauthor{Atrill:2006ly}, ``the acid test ratio is very similar to
+the \gls{glos:currentratio}, but it represents a more stringent test of liquidity'' excluding
+inventories that ``cannot be converted into cash quickly.'' It is calculated as:
+
+\begin{equation}
+  \text{Acid test ratio} = \frac{\text{Current assets (excluding inventories)}}{\text{Current liabilities}}
+\end{equation}
+
+It should normally have a value above 1 (\citeyear[188]{Atrill:2006ly}).
+}
+\newglossaryentry{glos:acidtestratio}{
+  name=acid test ratio,
+  firstplural=acid test ratios,
+  plural=acid test ratios,
+  description={\glosdescacidtestratio}
+}
+
 \def\glosdescliquidity{Liquidity is the ability to pay short-term obligations
 when they fall due. ``It is vital to the survival of a business that there are
 sufficient liquid resources available to meet maturing obligations (that is,
 amounts owing that must be paid in the near future).''
-\citep[141]{Atrill:2010ys}}
+\citep[141]{Atrill:2010ys} It is measured as
+\glslink[hyper=true]{glos:currentratio}{\gls{glos:currentratio}} or
+\gls[hyper=true]{glos:acidtestratio}.
+}
 \newglossaryentry{glos:liquidity}{
   name=liquidity,
   firstplural=liquidities,
@@ -125,18 +175,109 @@ amounts owing that must be paid in the near future).''
   description={\glosdescliquidity}
 }
 
+%------------------------------------------------------------------------------------------------------------------------
+
 \def\glosdescprofitability{The quality of affording gain or profit. ``Businesses
 generally exist with the primary purpose of creating wealth for their owners.
 Profitability ratios provide an insight to the degree of success in achieving
 this purpose. They express the profit made (or figures bearing on profit, such
 as sales revenue or particular expenses, like labour cost) in relation to other
-key figures in the financial statements or to some business resource.'' \citep[141]{Atrill:2010ys}}
+key figures in the financial statements or to some business resource.'' \citep[141]{Atrill:2010ys}
+It is measured as \glslink[hyper=true]{glos:rosf}{\gls{glos:rosf}},  \glslink[hyper=true]{glos:roce}{\gls{glos:roce}},
+ \glslink[hyper=true]{glos:netprofitmargin}{\gls{glos:netprofitmargin}} and
+  \glslink[hyper=true]{glos:grossprofitmargin}{\gls{glos:grossprofitmargin}}. 
+}
 \newglossaryentry{glos:profitability}{
   name=profitability,
   firstplural=profitabilities,
   plural=profitabilitie	s,
   description={\glosdescprofitability}
 }
+
+\def\glosdescrosf{``The return on ordinary shareholder's funds compares the amount
+of profit for the period available to the owners, with the owners' average stake in
+the business during that same period'' \citep[174]{Atrill:2006ly}: 
+
+\begin{equation}
+  \text{ROSF} = \frac{\text{Net profit after taxation and preference dividend (if any)}}{\text{Ordinary share capital plus reserves}} \times 100~\%
+\end{equation}
+
+The value should be as high as possible as long as ``it is not achieved at the
+expense of future returns by, for example, taking on more risky activities.''
+(\citeyear[175]{Atrill:2006ly}) 
+}
+
+\newglossaryentry{glos:rosf}{
+  name=Return on Ordinary Shareholder's Funds (ROSF),
+  firstplural=Returns on Ordinary Shareholder's Funds (ROSF),
+  plural=Returns on Ordinary Shareholder's Funds (ROSF),
+  description={\glosdescrosf}
+}
+
+\def\glosdescroce{``The return on capital employed \dots\, expresses the relationship
+between the net profit generated during a period and the average long-term capital
+invested in the business during that period'' \citep[175]{Atrill:2006ly}:
+
+\begin{equation}
+  \text{ROCE} = \frac{\text{Net profit before interest and taxation}}{\text{Share Capital} + \text{Long term loans}} \times 100~\%
+\end{equation}
+
+``ROCE is considered to be the main measure of profitability. It compares inputs (capital
+invested) with outputs (profit).'' (\citeyear[176]{Atrill:2006ly})
+}
+
+\newglossaryentry{glos:roce}{
+  name=Return on Capital Employed (ROCE),
+  firstplural=Returns on Capital Employed (ROCE),
+  plural=Returns on Capital Employed (ROCE),
+  description={\glosdescroce}
+}
+
+
+\def\glosdescnetprofitmargin{
+  ``The net profit margin ratio relates the net profit for the period to the sales revenue
+  during that period:''
+  
+  \begin{equation}
+    \text{Net profit margin} = \frac{\text{Net profit before interest and taxation}}{\text{Sales revenue}} \times 100~\%
+  \end{equation}
+
+  ``This is often regarded as the most appropriate measure of operational performance \dots\, because
+  differences arising from the way in which the business is financed will not influence the measure. \dots\,
+  The ratio can vary considerably between types of business.'' \citep[177]{Atrill:2006ly}
+}
+\newglossaryentry{glos:netprofitmargin}{
+  name=Net profit margin,
+  firstplural=Net profit margins,
+  plural=Net profit margins,
+  description={\glosdescnetprofitmargin}
+}
+
+
+
+\def\glosdescgrossprofitmargin{``The gross profit margin ratio relates
+the gross profit of the business to the sales revenue generated over the same period
+\dots\, The ratio is therefore a measure of profitability in buying (or producing)
+and selling goods before any other expenses:'' \citep[178]{Atrill:2006ly}
+
+\begin{subequations}
+\begin{align}
+  \text{Gross profit margin} &= \frac{\text{Gross profit}}{\text{Sales revenue}} \times 100~\%
+  \intertext{and with}
+  \text{Gross profit} &= \text{Sales revenue} - \text{Cost of sales}
+  \intertext{it follows}
+  \text{Gross profit margin} &= \left( 1 - \frac{\text{Cost of sales}}{\text{Sales revenue}} \right) \times 100~\%
+\end{align}
+\end{subequations}
+}
+\newglossaryentry{glos:grossprofitmargin}{
+  name=Gross profit margin,
+  firstplural=Gross profit margins,
+  plural=Gross profit margins,
+  description={\glosdescgrossprofitmargin}
+}
+
+
 
 
 
