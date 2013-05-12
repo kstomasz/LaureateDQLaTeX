@@ -30,6 +30,7 @@
 %-----------------------------------------------------
 
 %<content>%
+% \renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
 
 %------------------------------------------------------------------------------------------------------------------------
 
@@ -129,7 +130,7 @@ current ratio compares the `liquid' asssets \dots\, of the business with the
 current liabilities. The ratio is calculated as:''
 
 \begin{equation}
-  \text{Current ratio} = \frac{\text{Current assets}}{\text{Current liabilities}}
+  \text{Current Ratio} = \frac{\text{Current Assets}}{\text{Current Liabilities}}
 \end{equation}
 
 It should ideally have a value around 2  (\citeyear[160]{Atrill:2010ys}).
@@ -147,11 +148,22 @@ According to \citeauthor{Atrill:2006ly}, ``the acid test ratio is very similar t
 the \gls{glos:currentratio}, but it represents a more stringent test of liquidity'' excluding
 inventories that ``cannot be converted into cash quickly.'' It is calculated as:
 
-\begin{equation}
-  \text{Acid test ratio} = \frac{\text{Current assets (excluding inventories)}}{\text{Current liabilities}}
-\end{equation}
 
-It should normally have a value above 1 (\citeyear[188]{Atrill:2006ly}).
+\begin{subequations}
+\begin{align}
+  \text{Acid Test Ratio} &= \frac{\text{Current Assets} - \text{Inventories}}{\text{Current Liabilities}}
+  \intertext{and with}
+  \text{Current Ratio} &= \frac{\text{Current Assets}}{\text{Current Liabilities}}
+  \intertext{it follows}
+  \text{Acid Test Ratio} &= \text{Current Ratio}- \frac{\text{Inventories}}{\text{Current Liabilities}} \label{eqn:cr_acid}
+\end{align}
+\end{subequations}
+
+It should normally have a value above 1 (\citeyear[188]{Atrill:2006ly}). Equation \eqref{eqn:cr_acid}
+shows the dependence between acid test ratio and current ratio; in particular, the second part, the relation
+between inventories and current liabilities, can be understood as follows: a low value (or a high value of
+the ratio of current liabilities per inventories) indicates an over-reliance on unsold goods to finance operations. 
+It is also known as quick ratio or liquid ratio.
 }
 \newglossaryentry{glos:acidtestratio}{
   name=acid test ratio,
@@ -190,7 +202,7 @@ It is measured as \glslink[hyper=true]{glos:rosf}{\gls{glos:rosf}},  \glslink[hy
 \newglossaryentry{glos:profitability}{
   name=profitability,
   firstplural=profitabilities,
-  plural=profitabilitie	s,
+  plural=profitabilities,
   description={\glosdescprofitability}
 }
 
@@ -247,14 +259,44 @@ invested) with outputs (profit).'' (\citeyear[176]{Atrill:2006ly})
   The ratio can vary considerably between types of business.'' \citep[177]{Atrill:2006ly}
 }
 \newglossaryentry{glos:netprofitmargin}{
-  name=Net profit margin,
-  firstplural=Net profit margins,
-  plural=Net profit margins,
+  name=Net Profit Margin,
+  firstplural=Net Profit Margins,
+  plural=Net Profit Margins,
   description={\glosdescnetprofitmargin}
 }
 
 
+\def\glosdescnetprofit{
+The net profit, also known as the ``Bottom Line'', the net income or the net earnings of a company, measures
+the profitability of a company after accounting for all costs:
 
+\begin{subequations}
+\begin{align}
+\text{Net Profit} &= \underbrace{\underbrace{\text{Sales Revenue} - \text{COGS}}_{\text{Gross Profit}} - \text{SG\&A} - \text{R\&D}}_{\text{Operating Profit}} - \text{ITD} \label{eqn:netprofit}
+\end{align}
+\end{subequations}
+
+In equation \eqref{eqn:netprofit}, the \emph{ITD} refers to interest, taxes and depreciation expenses.
+}
+
+\newglossaryentry{glos:netprofit}{
+  name=Net Profit,
+  firstplural=Net Profits,
+  plural=Net Profits,
+  description={\glosdescnetprofit}
+}
+
+
+
+% \newcommand*{\aboxed}[2]{%
+%   \rlap{\boxed{#1#2}}%
+%   \phantom{\hskip\fboxrule\hskip\fboxsep #1}&\phantom{#2}%
+% }
+
+
+%=================================================================================
+% Gross Profit Margin
+%=================================================================================
 \def\glosdescgrossprofitmargin{``The gross profit margin ratio relates
 the gross profit of the business to the sales revenue generated over the same period
 \dots\, The ratio is therefore a measure of profitability in buying (or producing)
@@ -262,13 +304,18 @@ and selling goods before any other expenses:'' \citep[178]{Atrill:2006ly}
 
 \begin{subequations}
 \begin{align}
-  \text{Gross profit margin} &= \frac{\text{Gross profit}}{\text{Sales revenue}} \times 100~\%
+  \text{Gross Profit Margin} &= \frac{\text{Gross Profit}}{\text{Sales Revenue}} 
   \intertext{and with}
-  \text{Gross profit} &= \text{Sales revenue} - \text{Cost of sales}
+  \text{Gross Profit} &= \text{Sales Revenue} - \text{\glslink{cogs}{COGS}}
   \intertext{it follows}
-  \text{Gross profit margin} &= \left( 1 - \frac{\text{Cost of sales}}{\text{Sales revenue}} \right) \times 100~\%
+\tikzmarkin{a}(5.4,-0.5)(-1.0,0.75)\text{Gross Profit Margin} &=  1 - \frac{\text{\gls{cogs}}}{\text{Sales Revenue}} \label{eqn:grossprofitmargin}\tikzmarkend{a}
 \end{align}
 \end{subequations}
+
+
+Equation \eqref{eqn:grossprofitmargin} features the relation of cost of goods sold to revenue,
+also known as \glslink{glos:costofgoodstosales}{cost of goods sold ratio}. The gross profit
+margin is normally expressed as a percentage.
 }
 \newglossaryentry{glos:grossprofitmargin}{
   name=Gross profit margin,
@@ -277,6 +324,171 @@ and selling goods before any other expenses:'' \citep[178]{Atrill:2006ly}
   description={\glosdescgrossprofitmargin}
 }
 
+
+
+
+
+%=================================================================================
+% COGS
+%=================================================================================
+
+\def\glosdesccogs{Cost of Goods Sold (COGS) or cost of sales refers to the inventory costs 
+of the goods a business has sold during a given period of time. These costs include all costs
+of purchase, conversion and other costs including relocation of the goods into their current
+inventories and stocking condition: These costs may include material, labor, and overhead
+specifically allocated to the goods.}
+\newglossaryentry{glos:cogs}{
+  name=Cost of Goods Sold,
+  description={\glosdesccogs}
+}
+
+%=================================================================================
+% COGS to Sales Ratio
+%=================================================================================
+
+\def\glosdesccostofgoodstosales{
+  The COGS to Sales Ratio or Cost of Goods to Sales Ratio shows the percentage of sales revenue that is used
+  to pay for expenses which vary in direct relation to sales activities:
+  
+  \begin{equation}
+    \text{COGS Ratio} = \frac{\text{COGS}}{\text{Sales revenue}} \label{eqn:cogstosales}
+  \end{equation}
+  
+  A stable ratio over time can indicate that
+  the company is effective at controlling its \glslink{glos:grossprofitmargin}{gross profit margin}.
+}
+\newglossaryentry{glos:costofgoodstosales}{
+  name=Cost of Goods to Sales Ratio,
+  description={\glosdesccostofgoodstosales}
+}
+
+%=================================================================================
+% Markup Ratio
+%=================================================================================
+
+\def\glosdescmarkupratio{
+The markup ratio, in relation to one given product, is the difference between the selling price and the
+buying price of a product, expressed as a percentage of the buying price of that product. If calculated
+over all selling activities a company performed within a given period of time, the markup ratio for
+all goods sold can be calculated as follows:
+
+\begin{subequations}
+\begin{alignat}{4}
+   &  \text{Markup Ratio} &&=  \frac{\text{Sales Revenue} - \text{COGS}}{\text{COGS}} \\[0.2cm]
+  \intertext{hence}\\[-\baselineskip]
+   & \tikzmarkin{b}(3.2,-0.5)(-3.2,0.75) \text{Markup Ratio}  &&= \frac{\text{Sales Revenue}}{\text{COGS}} - 1  \label{eqn:markup}\tikzmarkend{b}\\[0.2cm]
+\intertext{Equation \eqref{eqn:markup} is particularly interesting as it mirrors equation \eqref{eqn:grossprofitmargin}.
+In particular, it follows that both Markup Ratio and Profit Margin are dependent, and it is sufficient to know
+one of them: Let's solve equation \eqref{eqn:grossprofitmargin} and use some abbreviations:}
+          & m &&=  \text{Gross Profit Margin}\\
+          &  u  &&= \text{Markup Ratio}\\
+  \eqref{eqn:grossprofitmargin} \RA & 1 - m &&= \frac{\text{COGS}}{\text{Sales Revenue}}\\[0.2cm]
+  \LRA & \frac{1}{1 - m} &&=  \frac{\text{Sales Revenue}}{\text{COGS}}\\[0.2cm]
+  \intertext{If we now substitute this into equation \eqref{eqn:markup}, we get:}
+  \eqref{eqn:markup} \RA & u &&=  \frac{1}{1 - m}  - 1\\[0.2cm]
+  \intertext{Doing some basic math, we get:}
+  \LRA & 1 + u &&= \frac{1}{1 - m}   \\[0.2cm]
+  \LRA & \left(1 + u \right) \left(1 - m \right) &&= 1\\[0.2cm]
+  \LRA & u - m  &&= m u \\[0.2cm]
+  \LRA & 1 - \frac{m}{u} &&= m \\[0.2cm]
+  \LRA & u = \frac{m}{1 - m}\\[0.2cm]
+  \intertext{or, unabbreviated,}
+   \LRA & \tikzmarkin{c}(2.1,-0.5)(-3.2,0.75) \text{Markup Ratio} &&= \frac{1 - \text{Gross Profit Margin}}{\text{Gross Profit Margin}}\label{eqn:markup2}\tikzmarkend{c}\\[0.2cm]
+  \intertext{conversely,}
+  \LRA & \tikzmarkin{d}(3.17,-0.5)(-3.2,0.75) \text{Gross Profit Margin} &&= \frac{\text{Markup Ratio}}{\text{Markup Ratio} + 1}\label{eqn:pm2}\tikzmarkend{d}\\[0.2cm]
+ \end{alignat}
+\end{subequations}
+
+Equations \eqref{eqn:markup2} and \eqref{eqn:pm2} can be used to convert markup ratio into 
+gross profit margin and vice versa. They show pretty clearly the relation between both ratios.
+}
+\newglossaryentry{glos:markupratio}{
+  name=Markup Ratio,
+  description={\glosdescmarkupratio}
+}
+
+%=================================================================================
+% Operating Profit Margin
+%=================================================================================
+
+
+\def\glosdescoperatingprofitmargin{
+The operating profit margin is defined as
+\begin{subequations}
+\begin{align}
+\text{Operating Profit Margin} &= \frac{\text{Operating Profit}}{\text{Sales Revenue}}
+\intertext{where}
+\text{Operating Profit} &= \text{Gross Profit} - \text{SG\&A} - \text{R\&D}
+\intertext{hence}
+\begin{split}\text{Operating Profit Margin} &= \text{Gross Profit Margin}\\ & - \frac{\text{SG\&A}}{\text{Sales Revenue}} - \frac{\text{R\&D}}{\text{Sales Revenue}} \label{eqn:opm}\end{split}
+\end{align}
+\end{subequations}
+
+Looking at equation \eqref{eqn:opm}, the operating margin, also called EBITDA margin, can be identified
+as the gross profit margin less the \gls{sga} to sales ratio---the cost of doing business per revenue---and the
+R\&D to sales ratio---also referred to as ``research intensity" (see \citeauthor{Hundley:1996kx} with regards
+to the relationship between research intensity, profitability and liquidity).
+}
+\newglossaryentry{glos:operatingprofitmargin}{
+  name=Operating Profit Margin,
+  firstplural=Operating Profit Margins,
+  plural=Operating Profit Margins,
+  description={\glosdescoperatingprofitmargin}
+}
+
+%=================================================================================
+% SG&A
+%=================================================================================
+
+\def\glosdescsga{
+The Selling, General and Administrative Expenses (SG\&A) are major non-productive costs presented in
+the income statement. They consist of costs for operating the business, split into:
+
+\begin{itemize}
+  \item \emph{Selling:} Cost of Sales, which includes salaries, marketing, rent, and all expenses
+  as well as taxes related to producing and selling the products.
+  \item \emph{General:} General operating expenses as well as taxes in relation to the operation
+  of the company.
+  \item \emph{Administration:} Executive salaries, support and associated taxes in relation to the
+  administration of the company.   
+\end{itemize}
+}
+\newglossaryentry{glos:sga}{
+  name={Selling, General and Administrative Expenses (SG\&A)},
+  firstplural={Selling, General and Administrative Expenses (SG\&A)},
+  plural={Selling, General and Administrative Expenses},
+  description={\glosdescsga}
+}
+
+
+%=================================================================================
+% Working Capital
+%=================================================================================
+
+\def\glosdescworkingcapital{According to \citeauthor{Losbichler:2012zr},
+``working capital is defined as the sum of inventories and customer
+receivables, less supplier liabilities, and is often measured by the cash-to-cash (C2C) cycle time.
+}
+\newglossaryentry{glos:workingcapital}{
+  name=Working Capital,
+  description={\glosdescworkingcapital}
+}
+
+
+\def\glosdescroa{
+The Return on Assets (ROA) indicates how profitable a company is related to its total assets,
+i.e. how efficient its management is at using the assets to generate earnings:
+
+\begin{equation}
+\text{Return on Asset} = \frac{\text{\gls{glos:netprofit}}}{\text{Total Assets}}
+\end{equation}
+
+The Return on Assets is often referred to as Return on Investment (ROI).
+}
+\newglossaryentry{glos:roa}{
+  name=Return on Assets (ROA),
+  description={\glosdescroa}
+}
 
 
 
