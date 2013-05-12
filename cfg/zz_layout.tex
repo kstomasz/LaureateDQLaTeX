@@ -106,7 +106,12 @@
             bookmarksopen=true,
             %pdfpagemode=FullScreen,
             plainpages=false,
+            hypertexnames=false,
             pdfpagelabels]{hyperref} 
+
+% \renewcommand{\theequation}{\equationgrouping\arabic{equation}}
+% \gdef\equationgrouping{}
+%\renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
 
 %-----------------------------------------------------
 % Nomenclature / Glossary
@@ -342,8 +347,15 @@ section]         %use section level for toc entries
 % \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{}
 % \fi
 
+\usepackage{fancybox}
 \usepackage{color}
+\usepackage{xcolor}
 \usepackage{array}
+\usepackage[customcolors]{hf-tikz}
+\hfsetfillcolor{blue!10}
+\hfsetbordercolor{blue}
+
+    
 
 %-----------------------------------------------------
 % Makros
