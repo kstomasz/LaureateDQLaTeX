@@ -6,6 +6,61 @@
 #
 #################################################
 
+
+#################################################
+# 
+# Configuration
+#
+#################################################
+
+TEXBIN=/usr/texbin/
+BIBFILE=../../../../Papers/Bibliography.bib
+
+#################################################
+# 
+# End of Configuration
+#
+#################################################
+
+PATH:=$(TEXBIN):$(PATH)
+
+ifdef loglvl
+  LOGLVL=$(loglvl)
+endif
+
+ifdef LOGLEVEL
+  LOGLVL=$(loglvl)
+endif
+
+ifdef loglevel
+  LOGLVL=$(loglevel)
+endif
+
+ifndef LOGLVL
+  LOGLVL=INFO
+endif
+
+ifdef lvl
+	LVL=$(lvl)
+endif
+
+ifndef LVL
+	LVL=DEBUG
+endif
+
+ifndef DEST
+	DEST=tmp
+endif
+
+
+ifeq ($(MAKE),)
+    MAKE := make
+endif
+
+define uc
+$(shell echo $1 | tr a-z A-Z)
+endef
+
 PACKAGE    = document
 VERSION    = 0.1
 
@@ -15,37 +70,101 @@ VERSION    = 0.1
 
 .NOTPARALLEL :
 
-.PHONY: check
-check :
-	if [ $(MAKELEVEL) -gt 20 ]; then \
-	  echo "Maximum recursion level reached. Aborting."; \
-	  exit 1; \
-	fi;\
-  mkdir -p tmp; 
-
-all : clean submit
 
 #################################################
-# 
-# Configuration
+#
+# Help function
+#
+#################################################
+.PHONY: help
+help :
+
+	echo "=========================================="
+	echo "Welcome to this massively informative help"
+	echo "=========================================="
+	echo 
+	echo "You have the following targets:           "
+	echo 
+	echo "make init       Initialize LaTeX Project. "
+	echo "                This deletes all content! "
+	echo
+	echo "make clean      Remove all LaTeX auxiliary"
+	echo "                files and build artefacts."
+	echo
+
+	echo
+	echo "=========================================="
+
+
+
+.PHONY: test
+test :
+	echo $$PATH
+
+
+
+#################################################
+#
+# Initial Things we mostly always want to do.
 #
 #################################################
 
-TEXBIN=/usr/texbin/
+.PHONY: check
+check :
+	$(MAKE) log msg="make check" LVL=info
+	#
+	# Check for maximum level of recursion
+	#
+	if [ $(MAKELEVEL) -gt 20 ]; then \
+		$(MAKE) log lvl=fatal msg="Maximum recursion level reached. Aborting."; \
+		exit 1; \
+	else \
+	  $(MAKE) log lvl=debug msg="Recursion level: $(MAKELEVEL)"; \
+	fi;
+
+	#
+	# Make sure the directory tmp exists
+	#
+	mkdir -p tmp;
+	
+	#
+	# Make sure there's a file wc.tex in tmp
+	#
+	if [ ! -f tmp/wc.tex ]; then touch tmp/wc.tex; fi
+
 
 #################################################
 # 
-# Initialize the Project, Remove old Content
+# Initialize the Project, remove old Content
 #
 #################################################
 
 .PHONY: init
-init :  check clean
+init : check clean
+	$(MAKE) log msg="make init" LVL=info
+	#
+	# Ask the user if that's really what he wants
+	#
+	read -r -p "This will reinitialize and remove all your content. Are you sure? [y/N] " response;\
+	if [[ $$response == "" || ! $$response =~ ^([yY][eE][sS]|[yY])$$ ]];  then echo no ; exit 1; fi;
+
+	#
+	# Parse directory name into .project
+	#
 	PROJ=$$(basename "$$(pwd)"); \
   echo Initializing $$PROJ; \
-  perl -pi -e "BEGIN{undef $$/};s#(<projectDescription.*?<name>)(.*?)(</name>)#\1$${PROJ}\3#ms" .project; \
-	for i in chapter*tex; do perl -pi -e 'BEGIN{undef $$/};s#(.*?%\s*?<content>\s*?%).*?(%\s*?</content>\s*?%.*)#\1\n\n\n\n\2\n\n#ms' $$i; done ; \
-  rm Bibliography.bib ; ln -s ../../../../Papers/Bibliography.bib
+  perl -pi -e "BEGIN{undef $$/};s#(<projectDescription.*?<name>)(.*?)(</name>)#\1$${PROJ}\3#ms" .project
+
+	#
+	# Remove everything between <content> and </content>
+	# from each .tex file
+	#
+	for i in chapter*tex; do perl -pi -e 'BEGIN{undef $$/};s#(.*?%\s*?<content>\s*?%).*?(%\s*?</content>\s*?%.*)#\1\n\n\n\n\2\n\n#ms' $$i; done ;
+	
+	#
+	# Resymlink Bibliography
+	#
+	rm -f Bibliography.bib ; ln -s $(BIBFILE)
 
 
 
@@ -57,10 +176,8 @@ init :  check clean
 
 .PHONY: pdf
 pdf : check pdflatex
-	if [ "$$silent" != "1" ] ; then \
-    echo make pdf DEST=$$DEST; \
-  fi; \
-  open document.pdf
+	$(MAKE) log msg="make pdf" LVL=info
+	open document.pdf
 
 
 #################################################
@@ -71,13 +188,8 @@ pdf : check pdflatex
 
 .PHONY: pdflatex
 pdflatex : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make pdflatex DEST=$$DEST; \
-  fi; \
-  export PATH=$$TEXBIN:$$PATH; \
-	export FORMAT=pdf; \
-	export DEST=tmp; \
-  if [ "$$verbose" == "1" ] ; then \
+	$(MAKE) log msg="make pdflatex" LVL=info
+	if [ "$$verbose" == "1" ] ; then \
     yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document; \
   else \
     yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
@@ -90,9 +202,9 @@ pdflatex : check
   if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
   if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
-  if [ -f document.blg ]; then mv document.blg $$DEST/; fi; \
-  if [ -f $$DEST/document.pdf ]; then mv $$DEST/document.pdf .; fi;\
-  if [ -f $$DEST/document.synctex.gz ]; then mv $$DEST/document.synctex.gz .; fi;
+  $(MAKE) totmp; \
+  if [ -f $$DEST/document.pdf ]; then mv $$DEST/document.pdf . >/dev/null 2>&1; fi;\
+  if [ -f $$DEST/document.synctex.gz ]; then mv $$DEST/document.synctex.gz . >/dev/null 2>&1; fi;
 
 
 #################################################
@@ -103,27 +215,46 @@ pdflatex : check
 
 .PHONY: htlatex
 htlatex : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make htlatex DEST=$$DEST; \
-  fi; \
-	export FORMAT=ht; \
-  for i in $(tex-files); do if [ -f "tmp/$$i" ]; then cp -a tmp/$$i . >/dev/null 2>&1; fi; done; \
+	$(MAKE) log msg="make htlatex" LVL=info
+	$(MAKE) fromtmp;
 	export DEST=.; \
   if [ "$$verbose" == "1" ] ; then \
     yes x | htlatex document.tex "cfg/myconfig.cfg"; \
   else \
     yes x | htlatex document.tex "cfg/myconfig.cfg" >/dev/null 2>&1; \
   fi; \
-  if grep -Fq "No file document.acr" $$DEST/document.log; then $(MAKE) acronyms; remake=1; fi; \
-  if grep -Fq "No file document.gls" $$DEST/document.log; then $(MAKE) glossary; remake=1; fi; \
-  if grep -Fq "No file document.syi" $$DEST/document.log; then $(MAKE) symbols;  remake=1; fi; \
-  if grep -Fq "No file document.ind" $$DEST/document.log; then $(MAKE) index;    remake=1; fi; \
-  if grep -Fq "Please (re)run Biber" $$DEST/document.log; then $(MAKE) biber;    remake=1; fi; \
-  if grep -Fq "Please rerun LaTeX"   $$DEST/document.log; then remake=1; fi; \
-  if [ "$$remake" == "1" ]; then \
-    $(MAKE) htlatex; \
-  else \
-    for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
+  remake=0; \
+  $(MAKE) totmp;\
+  if grep -Fq "No file document.acr" tmp/document.log; then $(MAKE) acronyms; remake=1; $(MAKE) log msg="Needed to make Acronyms." LVL=info; fi; \
+  if grep -Fq "No file document.gls" tmp/document.log; then $(MAKE) glossary; remake=1; $(MAKE) log msg="Needed to make Glossary." LVL=info; fi; \
+  if grep -Fq "No file document.syi" tmp/document.log; then $(MAKE) symbols;  remake=1; $(MAKE) log msg="Needed to make Symbols. " LVL=info; fi; \
+  if grep -Fq "No file document.ind" tmp/document.log; then $(MAKE) index;    remake=1; $(MAKE) log msg="Needed to make Index.   " LVL=info; fi; \
+  if grep -Fq "Please (re)run Biber" tmp/document.log; then $(MAKE) biber;    remake=1; $(MAKE) log msg="Needed to make Biber.   " LVL=info; fi; \
+  if grep -Fq "Please rerun LaTeX"   tmp/document.log; then remake=1; fi; \
+  echo "remake is: $$remake";\
+  if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
+  if [ -f tmp/document.pdf ]; then mv tmp/document.pdf . >/dev/null 2>&1; fi;\
+  if [ -f tmp/document.synctex.gz ]; then mv tmp/document.synctex.gz . >/dev/null 2>&1; fi;
+
+
+
+#################################################
+# 
+# Run Makeindex
+#
+#################################################
+.PHONY: makeindex
+makeindex :
+	$(MAKE) log msg="make $$INDEX" LVL=info
+	if [ ! -f $$DEST/document.ist ]; then  \
+    $(MAKE) pdflatex; \
+  fi; \
+  if [ -f $$DEST/document.$$INDEXFILE ] ; then \
+  	if [ "$$verbose" == "1" ] ; then \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.$$LOGFILE -o $$DEST/document.$$OUTFILE $$DEST/document.$$INDEXFILE; \
+    else \
+      makeindex -s $$DEST/document.ist -t $$DEST/document.$$LOGFILE -o $$DEST/document.$$OUTFILE $$DEST/document.$$INDEXFILE >/dev/null 2>&1; \
+    fi; \
   fi;
 
 
@@ -135,21 +266,8 @@ htlatex : check
 
 .PHONY: acronyms
 acronyms : check 
-	if [ "$$silent" != "1" ] ; then \
-    echo make acronyms DEST=$$DEST; \
-  fi; \
-  if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
-  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
-  if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $${FORMAT}latex; \
-  fi; \
-  if [ -f $$DEST/document.acn ] ; then \
-  	if [ "$$verbose" == "1" ] ; then \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn; \
-    else \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.alg -o $$DEST/document.acr $$DEST/document.acn >/dev/null 2>&1; \
-    fi; \
-  fi;
+	$(MAKE) makeindex LOGFILE=alg OUTFILE=acr INDEXFILE=acn INDEX=acronyms
+
 
 #################################################
 # 
@@ -159,21 +277,7 @@ acronyms : check
 
 .PHONY: glossary
 glossary : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make glossary DEST=$$DEST; \
-  fi; \
-  if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
-  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
-  if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $${FORMAT}latex; \
-  fi; \
-  if [ -f $$DEST/document.glo ] ; then \
-  	if [ "$$verbose" == "1" ] ; then \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo; \
-    else \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.glg -o $$DEST/document.gls $$DEST/document.glo >/dev/null 2>&1; \
-    fi; \
-  fi;
+	$(MAKE) makeindex LOGFILE=glg OUTFILE=gls INDEXFILE=glo INDEX=glossary
 
 
 #################################################
@@ -184,21 +288,7 @@ glossary : check
 
 .PHONY: symbols
 symbols : check 
-	if [ "$$silent" != "1" ] ; then \
-    echo make symbols DEST=$$DEST; \
-  fi; \
-	if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
-  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
-  if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $${FORMAT}latex; \
-  fi; \
-  if [ -f $$DEST/document.syg ] ; then \
-	  if [ "$$verbose" == "1" ] ; then \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg; \
-    else \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.slg -o $$DEST/document.syi $$DEST/document.syg >/dev/null 2>&1; \
-    fi; \
-  fi;
+	$(MAKE) makeindex LOGFILE=slg OUTFILE=syi INDEXFILE=syg INDEX=symbols
 
 
 #################################################
@@ -209,21 +299,7 @@ symbols : check
 
 .PHONY: index
 index : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make index DEST=$$DEST; \
-  fi; \
-	if [ "$$DEST"   == "" ] ; then export DEST=tmp; fi; \
-  if [ "$$FORMAT" == "" ] ; then export FORMAT=pdf; fi; \
-  if [ ! -f $$DEST/document.ist ]; then  \
-    $(MAKE) $${FORMAT}latex; \
-  fi; \
-  if [ -f $$DEST/document.idx ] ; then \
-	  if [ "$$verbose" == "1" ] ; then \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx; \
-    else \
-      makeindex -s $$DEST/document.ist -t $$DEST/document.ilg -o $$DEST/document.ind $$DEST/document.idx >/dev/null 2>&1; \
-    fi; \
-  fi;
+	$(MAKE) makeindex LOGFILE=ilg OUTFILE=ind INDEXFILE=idx INDEX=index
 
 
 #################################################
@@ -234,24 +310,30 @@ index : check
 
 .PHONY: biber
 biber : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make biber DEST=$$DEST; \
-  fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
-  if [ ! -f $$DEST/document.log ]; then  \
-    $(MAKE) $(FORMAT)latex; \
-  fi;
+	$(MAKE) log msg="make biber" LVL=info
+	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi;
+	if [ ! -f $$DEST/document.log ]; then  \
+		$(MAKE) $(FORMAT)latex; \
+	fi;
 	if [ "$$verbose" == "1" ] ; then \
-    biber --output_directory=$$DEST document; \
-  else \
-    biber --output_directory=$$DEST document >/dev/null 2>&1; \
-  fi; 
-	if [ -f document.blg -a "$$DEST" == "tmp" ]; then mv document.blg tmp/; fi; \
-  if grep -Fq "pdfTeX warning (dest): name{acn:" $$DEST/document.log; then $(MAKE) acronyms; fi; \
-  if grep -Fq "pdfTeX warning (dest): name{glo:" $$DEST/document.log; then $(MAKE) glossary; fi; \
-  if grep -Fq "pdfTeX warning (dest): name{syg:" $$DEST/document.log; then $(MAKE) symbols;  fi; \
-  if grep -Fq "pdfTeX warning (dest): name{idx:" $$DEST/document.log; then $(MAKE) index;    fi;
-  
+		biber --output_directory=$$DEST document; \
+	else \
+		biber --output_directory=$$DEST document >/dev/null 2>&1; \
+	fi;
+	
+	#
+	# Sometines a document.blg gets generated, so we move it away
+	#
+	if [ -f document.blg -a "$$DEST" == "tmp" ]; then mv document.blg tmp/ >/dev/null 2>&1; fi; \
+	
+	#
+	# Conditionally remake indices
+	#
+	if grep -Fq "pdfTeX warning (dest): name{acn:" $$DEST/document.log; then $(MAKE) acronyms; fi;
+	if grep -Fq "pdfTeX warning (dest): name{glo:" $$DEST/document.log; then $(MAKE) glossary; fi;
+	if grep -Fq "pdfTeX warning (dest): name{syg:" $$DEST/document.log; then $(MAKE) symbols;  fi;
+	if grep -Fq "pdfTeX warning (dest): name{idx:" $$DEST/document.log; then $(MAKE) index;    fi;
+
 
 #################################################
 # 
@@ -261,11 +343,13 @@ biber : check
 
 .PHONY: wc
 wc : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make wc DEST=$$DEST; \
-  fi; \
-  if [ -f tmp/wc.tex ] ; then if [ -s tmp/wc.tex ] ; then if [ "$$(cat tmp/wc.tex)" != "." ] ; then cat tmp/wc.tex; exit ; fi ; fi ; fi; \
-	if [ "$$DEST" == "" ] ; then export DEST=tmp; fi; \
+	$(MAKE) log msg="make wc" LVL=info
+	if [ -s tmp/wc.tex ] ; then \
+		if [ "$$(cat tmp/wc.tex)" != "." ] ; then \
+			cat tmp/wc.tex; \
+			exit; \
+		fi; \
+	fi; \
   if [ -d sav ]; then\
     if [ "$$silent" == "1" ] ; then echo "."; else echo "Directory sav exists; exiting."; fi;\
     exit 1;\
@@ -280,33 +364,24 @@ wc : check
   cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Assignment\}.*?\\section\*\{Assignment Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
   mv chapter_00.new chapter_00.tex;\
   \
-  if [ "$$fromtex" != "1" ] ; then \
-    $(MAKE) pdflatex; \
-  fi;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
   for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
   if [ "$$verbose" == "1" ] ; then \
-    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST ; \
-    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/ ;\
-    t4ht -f/document.tex document -dtmp/ -m644 ;\
+    $(MAKE) htlatex;\
   else \
-    yes x | latex '\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCode"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode 'cfg/myconfig.cfg'.a.b.c.\input ' document.tex  -output-directory=$$DEST  >/dev/null 2>&1 ; \
-    tex4ht -f/document.tex  -i~/tex4ht.dir/texmf/tex4ht/ht-fonts/  >/dev/null 2>&1 ;\
-    t4ht -f/document.tex document -dtmp/ -m644 >/dev/null 2>&1  ;\
+    $(MAKE) htlatex >/dev/null 2>&1;\
   fi; \
+  $(MAKE) totmp;\
   cat $$DEST/document.html | perl -pi -e 's/\\relax//g' > document2.html; \
-  mv document2.html document.html; \
+  mv document2.html document.html >/dev/null 2>&1;\
   if [ "$$verbose" == "1" ] ; then \
     python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm"; \
   fi; \
   python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" > tmp/wc.log; \
-  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w | sed 's/ //g'; \
+  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w | sed 's/ //g' | tee tmp/wc.tex; \
   cp -a sav/* . >/dev/null 2>&1;\
   rm -rf sav >/dev/null 2>&1; \
-  for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
-  if [ "$$fromtex" == "1" ] ; then \
-    rm -f tmp/document.ist tmp/document.glg tmp/document.gls tmp/document.glo;\
-  fi;\
+  $(MAKE) totmp;
 
 
 #################################################
@@ -317,10 +392,8 @@ wc : check
 
 .PHONY: submit
 submit : check
-	if [ "$$silent" != "1" ] ; then \
-    echo make submit DEST=$$DEST; \
-  fi; \
-  if [ -d sav_submit ]; then\
+	$(MAKE) log msg="make submit" LVL=info
+	if [ -d sav_submit ]; then\
     echo Directory sav_submit exists - exiting.;\
     exit 1;\
   fi;\
@@ -364,18 +437,59 @@ submit : check
 
 .PHONY: clean
 clean :
-	if [ "$$silent" != "1" ] ; then \
-    echo make clean DEST=$$DEST; \
-  fi; \
-  if [ -f tmp/wc.tex ] ; then rm tmp/wc.tex; fi; \
-  for i in $(tex-files); do \
-    for f in `find . -name "$$i"|grep -v .git`; do \
-      rm -f $$f;\
-    done;\
-  done; \
-  mkdir -p tmp; \
-  if find tmp/ -maxdepth 0 -type f | read; then rm tmp/*; fi; \
-  touch tmp/document.ent;
+	$(MAKE) log lvl=info msg="make clean"
+	
+	#
+	# Remove all files matching pattern in tex-files
+	#
+	for i in $(tex-files); do \
+		for f in `find . -name "$$i"|grep -v .git`; do \
+			rm -f $$f;\
+		done;\
+	done;
+  
+  #
+  # Remake directory tmp
+  #
+	mkdir -p tmp;
+	
+	#
+	# Remove everything from tmp;
+	#
+	if find tmp/ -maxdepth 0 -type f | read; then rm tmp/*; fi;
+	
+  #
+  # Create the file document.ent which seems to be needed.
+  #
+	touch tmp/document.ent;
+
+
+.PHONY: fromtmp
+fromtmp :
+	$(MAKE) log lvl=debug msg="make fromtmp"
+	for i in $(tex-files); do \
+		for j in $$(find tmp/ -d 1 -type f -iname "$$i"); do \
+			if [ -f "$$j" ]; then \
+				$(MAKE) Makefile log lvl=debug msg="cp -a $$j ."; \
+				cp -a "$$j" . >/dev/null 2>&1;\
+			fi;\
+		done;\
+	done;\
+
+
+.PHONY: totmp
+totmp :
+	$(MAKE) log lvl=debug msg="make totmp"
+	for i in $(tex-files); do \
+		for j in $$(find . -d 1 -type f -iname "$$i"); do \
+			if [ -f "$$j" ]; then \
+				$(MAKE) log lvl=debug msg="mv $$j tmp/"; \
+				mv $$j tmp/ >/dev/null 2>&1;\
+			fi;\
+		done;\
+	done;
+
+
 
 tex-files =	\
 	*.4ct	\
@@ -414,6 +528,53 @@ tex-files =	\
 	*.tmp	\
 	*.toc	\
 	*.xref \
+	wc.tex \
 	zzdocument.ps
 	
 
+
+
+#################################################
+# 
+# Rudimentary logging functionality
+#
+#################################################
+
+.PHONY: log
+log :
+	if [ "$$silent" == "1" ] ; then exit 0; fi
+	#
+	# Log levels are DEBUG, INFO, WARN, ERROR, FATAL 
+	#
+	case "$(call uc,$(LVL))" in\
+		DEBUG|"")\
+			case "$(call uc,$(LOGLVL))" in\
+				DEBUG)\
+					echo $$msg;\
+			esac;\
+			;;\
+		INFO)\
+			case "$(call uc,$(LOGLVL))" in\
+				DEBUG|INFO)\
+					echo $$msg;\
+			esac;\
+			;;\
+		WARN)\
+			case "$(call uc,$(LOGLVL))" in\
+				DEBUG|INFO|WARN)\
+					echo $$msg;\
+			esac;\
+			;;\
+		ERROR)\
+			case "$(call uc,$(LOGLVL))" in\
+				DEBUG|INFO|WARN|ERROR)\
+					echo $$msg;\
+			esac;\
+			;;\
+		FATAL)\
+			case "$(call uc,$(LOGLVL))" in\
+				DEBUG|INFO|WARN|ERROR|FATAL)\
+					echo $$msg;\
+			esac;\
+			;;\
+  esac;\
