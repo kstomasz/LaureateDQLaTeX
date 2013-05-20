@@ -32,7 +32,9 @@
 %\includeonly{chapter0,chapter1,chapter2,chapter3}
 \makeindex
 \usepackage{microtype}
-
+\newlength{\oldabovedisplayskip}
+\setlength{\oldabovedisplayskip}{\abovedisplayskip}
+\setlength{\abovedisplayskip}{0pt}
 
 \begin{document}  
 

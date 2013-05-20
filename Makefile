@@ -111,7 +111,7 @@ test :
 
 .PHONY: check
 check :
-	$(MAKE) log msg="make check" LVL=info
+	$(MAKE) log msg="make check" LVL=debug
 	#
 	# Check for maximum level of recursion
 	#
@@ -521,6 +521,7 @@ tex-files =	\
 	*.lot	\
 	*.odt	\
 	*.out	\
+	*.png	\
 	*.run*.xml	\
 	*.slg	\
 	*.syg	\
