@@ -12,11 +12,28 @@
 \def\tab{\hspace{2 cm}}
 \def\fn{\footnote}
 \def\en{\endnote}
-\def\Unterschrift{\newline \includegraphics[width=4cm]{unter} \newline}
+\def\Unterschrift{\newline \includegraphics[width=4cm]{fig/unter} \newline}
 \def\unterschrift{\Unterschrift}
 \newcommand{\bs}{$\backslash$}
- \def\LRA{\Leftrightarrow\mkern40mu}
- \def\RA{\Rightarrow\mkern40mu}
+
+%
+% Mathematical proofs
+%
+\def\LRA{\Leftrightarrow\mkern40mu}
+\def\RA{\Rightarrow\mkern40mu}
+\newcommand{\qed}{\hfill \ensuremath{\hfill \blacksquare}}
+
+%
+% Currency Symbols
+%
+\def\gbpm{\text{\,M\pounds}}
+\def\gbp{\text{\,\pounds}}
+\def\usdm{\text{\,M\$}}
+\def\usd{\text{\,\$}}
+\def\eurm{\text{\,M\euro}}
+\def\eur{\text{\,\euro}}
+\def\perc{\text{~\%}}
+ 
  
 %-----------------------------------------------------
 % dangerous / ddangerous etc. environments a la Knuth: 
@@ -105,3 +122,105 @@ to0pt{\hskip-
 \bottomrule[0.25pt]
 \end {tabular}
 }}
+
+
+%-----------------------------------------------------
+% Exhibit:
+%
+% Use:
+%
+% \begin{exhibit}[TOCCaption]{Caption}[rRiIlLoO][.5][32]
+%
+% Parameters:
+%
+% 1. Optional parameter TOCCaption gives the
+%     entry into \listofexhibit
+%
+% 2. Mandatory parameter: Caption
+%
+% 3. Optional parameter:  Lines to wrap around.
+%     Not needed unless positioned to the right with e.g.
+%     an itemize to the left. In this case, specify the number
+%     of lines running left of the exhibit.
+%
+% 4. Optional parameter: alignment. One of:
+%     r:		right
+%     R:	right, floating
+%     i:		inner border
+%     I:		inner border, floating
+%     l:		left
+%     L:		left, floating
+%     o:		outer border (default)
+%     O:	outer border, floating
+%
+% 5. Optional parameter: Size as percentage
+%     of line width. Over .8 (80%), no wrapfig will be
+%     used.
+%
+%-----------------------------------------------------
+\definecolor{exhibittitlebackground}{rgb}{.698,.780,.7411}
+\definecolor{exhibittitlefont}{rgb}{1.,1,.7}
+\definecolor{exhibitbodybackground}{rgb}{.733,.769,.847}
+\setlength{\intextsep}{0cm plus1cm minus1cm}
+
+\newcommand{\listexhibitname}{List of Exhibits}
+\newlistof{exhibit}{loe}{\listexhibitname}
+\renewcommand{\theexhibit}{\arabic{exhibit}}
+\makeatletter
+\NewDocumentEnvironment{exhibit}{O{} m O{} O{.5} O{o}}{%
+\refstepcounter{exhibit}%
+%
+% If first parameter is empty, utilize caption for list of exhibits
+%
+\ifthenelse{\isempty{#1}{}}{\def\m@tcapt{#2}}{\def\m@tcapt{#1}}%
+%
+% Create variable for caption
+%
+\def\m@capt{#2}%
+%
+%
+% Test for default value of alignment
+%
+\ifthenelse{\isempty{#5}}{\def\m@align{o}}{\def\m@align{#5}}%
+% 
+% Test for width
+%
+\ifthenelse{\isempty{#4}}{\def\m@width{.5}}{%
+  \ifthenelse{\lengthtest{#4 pt  > .973 pt }}{%
+    \def\m@width{.973}%
+  }{%
+    \def\m@width{#4}%
+  }%
+}%
+%
+% Add entry to list of exhibits
+%
+\addcontentsline{loe}{exhibit}{\protect\numberline{\theexhibit}\m@tcapt}%
+%
+% Add wrapfig environment, but only if not too wide
+%
+\ifthenelse{\lengthtest{\m@width pt  < .81 pt }}{%
+  \ifthenelse{\isempty{#3}}{%
+    \wrapfigure{\m@align}[0pt]{0pt}% Alignment: rRlLiIoO
+  }{%
+    \wrapfigure[#3]{\m@align}[0pt]{0pt}% Alignment: rRlLiIoO
+  }%
+}{%
+  \center%
+}%
+\tabular{p{\m@width\textwidth}}\toprule%
+\rowcolor{exhibittitlebackground}\color{exhibittitlefont}\raisebox{5pt}{\fontsize{11}{13}\selectfont\textsc{Exhibit~\theexhibit: \m@capt}}\\\midrule %
+\rowcolor{exhibitbodybackground}\fontsize{10}{13}\selectfont%
+}{%
+\\\bottomrule\\\endtabular%
+%
+% Finish wrapfig environment only if not too wide
+%
+\ifthenelse{\lengthtest{\m@width pt < .81 pt}}{%
+  \endwrapfigure%
+}{%
+  \endcenter%
+}%
+\vspace*{-\parskip}%
+}%
+\makeatother

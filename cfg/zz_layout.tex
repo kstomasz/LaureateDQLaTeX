@@ -1,11 +1,26 @@
+%=====================================================
+% Document Type and Geometry
+%=====================================================
+
+\documentclass[12pt,a4paper,fleqn,twoside]{\doctype}	  	
+%\write18{if [ ! -f tmp/wc.tex -o ! -s tmp/wc.tex ] ; then make wc verbose=0 loglvl=error fromtex=1 > tmp/wc.tex ; fi}
+
 %-----------------------------------------------------
 % Overall Geometry of the Document
 %-----------------------------------------------------
-\documentclass[12pt,a4paper,fleqn,twoside]{article}	  	
-%\write18{if [ ! -f tmp/wc.tex -o ! -s tmp/wc.tex ] ; then make wc verbose=0 loglvl=error fromtex=1 > tmp/wc.tex ; fi}
-\usepackage{cmap}
 
+
+\usepackage{eurosym}
+
+\usepackage{xparse}
+\usepackage{xifthen}
+
+
+\usepackage{cmap}
+\usepackage{fix-cm}
 \usepackage[hmarginratio=1:1]{geometry}
+\usepackage{boxedminipage}
+
 \geometry{%
   left=2.5cm,				% left margin
   top=3.5cm,				% top  margin
@@ -15,6 +30,13 @@
 \setlength{\headsep}{1cm}							% distance of header
 \setlength{\footskip}{1.5cm}					    % distance of footer
 \renewcommand{\baselinestretch}{1.0}     % 1line distance
+
+\newlength{\oldabovedisplayskip}
+\setlength{\oldabovedisplayskip}{\abovedisplayskip}
+\setlength{\abovedisplayskip}{0pt}
+
+
+\usepackage{adjustbox}
 
 %----------------------------------------------------- 
 % Language
@@ -34,22 +56,45 @@
 \usepackage[Sonny]{sty/fncychap/fncychap}
 \ChNumVar{\fontsize{60}{62}}
 
+\usepackage[titles]{tocloft}
+
 
 %-----------------------------------------------------
 % Floats, Tables, Equations
 %-----------------------------------------------------
-\usepackage[hang]{caption} 
+\usepackage[hang]{caption}
+\usepackage{capt-of} 
 \usepackage[section] {placeins}
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{booktabs}
 \usepackage{latexsym}
-\setcounter{totalnumber}{4}                     % max. no. of floats / page
-\setcounter{topnumber}{2}                       % max. no. of floats / page top
-\setcounter{bottomnumber}{2}                 % max. no. of floats / page bottom
-\renewcommand{\topfraction}{1}           % half the page can be filled with
-\renewcommand{\bottomfraction}{1}    % floats for top and bottom half
+
+% Alter some LaTeX defaults for better treatment of figures:
+% See p.105 of "TeX Unbound" for suggested values.
+% See pp. 199-200 of Lamport's "LaTeX" book for details.
+%   General parameters, for ALL pages:
+\renewcommand{\topfraction}{0.9}	% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8}	% max fraction of floats at bottom
+%   Parameters for TEXT pages (not float pages):
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}     % 2 may work better
+\setcounter{dbltopnumber}{2}    % for 2-column pages
+\renewcommand{\dbltopfraction}{0.9}	% fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
+%   Parameters for FLOAT pages (not text pages):
+\renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+% N.B.: floatpagefraction MUST be less than topfraction !!
+\renewcommand{\dblfloatpagefraction}{0.7}	% require fuller float pages
+% Remember to use [htp] or [htpb] for placement
+
+
+
+
 \usepackage{wrapfig}
+
+\usepackage{lipsum}
 
 %-----------------------------------------------------
 % Listings
@@ -105,13 +150,73 @@
             bookmarks=true,
             bookmarksopen=true,
             %pdfpagemode=FullScreen,
+            %hyperindex=false,
             plainpages=false,
-            hypertexnames=false,
+            %hypertexnames=false,
             pdfpagelabels]{hyperref} 
 
+
+%===<exclude> for word count
+
+%%% define a new counter and use it for \theHequation which hyperref uses for the links
+% \newcounter{Hequation}
+% \renewcommand{\theHequation}{\thechapter.\arabic{Hequation}}
+% \makeatletter
+% \g@addto@macro\equations{\stepcounter{Hequation}}
+% \makeatother
+
+
+
+% Manually set the section; set a new 'block'
+%\newcommand{\setgroupingsection}[1]{\setcounter{section}{#1}\setgroupingblock{#1}}
+% Set a 'block' for numbering equations, overriding any section, and resetting the equation counter
+%\newcommand{\setgroupingblock}[1]{\gdef\equationgrouping{#1:}\phantomsection\setcounter{equation}{0}}
+
+% Equation numbering and referencing
+%\renewcommand{\theequation}{\equationgrouping\arabic{equation}}
+% \newcounter{mnbar}
+% \newcommand{\mnfoo}{%
+%         \stepcounter{mnbar}%
+%         \themnbar}
+
+
+%
+% Massively ugly workaround of hyperrefs issues with equations in glossaries
+%
+\makeatletter
+%\renewcommand{\theHequation}{\@currentHref\theHchapter.\theHsection.\equationgrouping\arabic{equation}}
+\renewcommand{\theHequation}{\@currentHref.\arabic{equation}}
+\gdef\equationgrouping{}
+\makeatother
+
+% 
+% \makeatletter
+% \renewcommand*{\glshyperlink}[2][\gls{\@glo@label}]{%
+% \def\@glo@label{#2}%
+% \@glslink{glo:#2}{#1}}
+% \makeatother
+
+ %\renewcommand\pagenumbering[1]{}
+%\renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
+
+% \renewcommand*\frontmatter{%
+%  \setcounter{chapter}{0}%
+%  \renewcommand\theHchapter{front.\arabic{chapter}}}
+%  
+%  \renewcommand*\backmatter{%
+%  \setcounter{chapter}{0}%
+%  \renewcommand\theHchapter{back.\arabic{chapter}}}
+%   
+%  \renewcommand*\mainmatter{%
+%  \setcounter{chapter}{0}%
+%  \renewcommand\theHchapter{main.\arabic{chapter}}} 
+  
 % \renewcommand{\theequation}{\equationgrouping\arabic{equation}}
 % \gdef\equationgrouping{}
 %\renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
+
+
+%===</exclude>
 
 %-----------------------------------------------------
 % Nomenclature / Glossary
@@ -226,6 +331,7 @@ section]         %use section level for toc entries
 %-----------------------------------------------------
 
 \usepackage[fleqn,tbtags]{mathtools}
+\usepackage{amssymb}
 \mathtoolsset{showonlyrefs}
 
 %
@@ -298,7 +404,7 @@ section]         %use section level for toc entries
 \usepackage[flushmargin, hang]{footmisc}		
 \usepackage{sty/botfnote/botfnote}
 %\usepackage{endnotes}
-\usepackage[backref]{sty/enotez/enotez}
+\usepackage[backref,counter-format=Roman]{sty/enotez/enotez}
 
 %Disable to have actual footnotes
 %\let\footnote=\endnote
@@ -349,15 +455,17 @@ section]         %use section level for toc entries
 
 \usepackage{fancybox}
 \usepackage{color}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{array}
 \usepackage[customcolors]{hf-tikz}
+
 
 \usetikzlibrary{calc}
 \tikzstyle{every picture}+=[remember picture]
 \hfsetfillcolor{blue!10}
 \hfsetbordercolor{blue}
 
+\usepackage{microtype}
     
 
 %-----------------------------------------------------

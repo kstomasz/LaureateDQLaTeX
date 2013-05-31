@@ -516,6 +516,7 @@ tex-files =	\
 	*.ist	\
 	*.lbx	\
 	*.lg	\
+        *.loe   \
 	*.lof	\
 	*.log	\
 	*.lot	\
