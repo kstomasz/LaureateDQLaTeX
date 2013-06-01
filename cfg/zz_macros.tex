@@ -158,14 +158,45 @@ to0pt{\hskip-
 %     used.
 %
 %-----------------------------------------------------
+% Sample:
+%-----------------------------------------------------
+%
+% \begin{exhibit}[CVP, Price Adjusted]{Price Adjusted CVP}[][.41]
+% Nulla malesuada porttitor diam. Donec felis erat, congue non, volutpat at,
+% tincidunt tristique, libero. Vivamus viverra fermentum felis. Donec nonummy
+% pellentesque ante.  \bigskip
+% 
+% \centerline{\colorbox{white}{\framebox{\includegraphics[width=0.9 \linewidth]{fig/cvp_variable_pricing.pdf}}}}
+% \captionof{figure}[LabelInTOC]{FigureCaption}
+% \captionsetup{font={footnotesize,it}}
+% \vspace{-0.3cm}
+% \captionof*{figure}{Source: Bla.}
+% \label{fig:Label}
+% \bigskip
+% 
+% Donec felis erat, congue non, volutpat at, tincidunt tristique, 
+% \end{exhibit}
+%
+%-----------------------------------------------------
+\ifpdf
 \definecolor{exhibittitlebackground}{rgb}{.698,.780,.7411}
 \definecolor{exhibittitlefont}{rgb}{1.,1,.7}
 \definecolor{exhibitbodybackground}{rgb}{.733,.769,.847}
+\else
+%\Configure{HColor}{exhibittitlebackground}{rgb(.698,.780,.7411)}
+%\Configure{HColor}{exhibittitlefont}{rgb(1.,1,.7)}
+%\Configure{HColor}{exhibitbodybackground}{rgb(.733,.769,.847)}
+\fi
+
 \setlength{\intextsep}{0cm plus1cm minus1cm}
 
 \newcommand{\listexhibitname}{List of Exhibits}
 \newlistof{exhibit}{loe}{\listexhibitname}
-\renewcommand{\theexhibit}{\arabic{exhibit}}
+\ifthenelse{\equal{\doctype}{book}}{
+  \renewcommand{\theexhibit}{\arabic{chapter}.\arabic{exhibit}}
+}{
+  \renewcommand{\theexhibit}{\arabic{exhibit}}
+}
 \makeatletter
 \NewDocumentEnvironment{exhibit}{O{} m O{} O{.5} O{o}}{%
 \refstepcounter{exhibit}%
@@ -195,10 +226,14 @@ to0pt{\hskip-
 %
 % Add entry to list of exhibits
 %
-\addcontentsline{loe}{exhibit}{\protect\numberline{\theexhibit}\m@tcapt}%
+\ifpdf
+\addcontentsline{loe}{exhibit}{\protect\numberline{\theexhibit}\m@tcapt}\par%
+\fi
 %
 % Add wrapfig environment, but only if not too wide
 %
+\wcounte%
+\ifpdf%
 \ifthenelse{\lengthtest{\m@width pt  < .81 pt }}{%
   \ifthenelse{\isempty{#3}}{%
     \wrapfigure{\m@align}[0pt]{0pt}% Alignment: rRlLiIoO
@@ -208,19 +243,37 @@ to0pt{\hskip-
 }{%
   \center%
 }%
+\else%
+  \center%
+\fi%
 \tabular{p{\m@width\textwidth}}\toprule%
-\rowcolor{exhibittitlebackground}\color{exhibittitlefont}\raisebox{5pt}{\fontsize{11}{13}\selectfont\textsc{Exhibit~\theexhibit: \m@capt}}\\\midrule %
-\rowcolor{exhibitbodybackground}\fontsize{10}{13}\selectfont%
+\ifpdf%
+\rowcolor{exhibittitlebackground}\color{exhibittitlefont}\raisebox{5pt}{%
+\fi%
+\fontsize{11}{13}\selectfont\textsc{Exhibit~\theexhibit: \m@capt}
+\ifpdf%
+}%
+\fi%
+\\\midrule %
+\ifpdf%
+\rowcolor{exhibitbodybackground}%
+\fi%
+\fontsize{10}{13}\selectfont%
 }{%
 \\\bottomrule\\\endtabular%
+\wcounta%
 %
 % Finish wrapfig environment only if not too wide
 %
+\ifpdf%
 \ifthenelse{\lengthtest{\m@width pt < .81 pt}}{%
   \endwrapfigure%
 }{%
   \endcenter%
 }%
+\else%
+  \endcenter%
+\fi%
 \vspace*{-\parskip}%
 }%
 \makeatother

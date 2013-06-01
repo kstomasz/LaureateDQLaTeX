@@ -3,25 +3,23 @@
 %=====================================================
 
 %=====================================================
-% Word Count
-%=====================================================
-
-\bigskip \hfill \emph{\input{tmp/wc.tex}}\emph{Words} excluding question, notes and references.\bigskip
-
-
-%=====================================================
 % Appendix
 %=====================================================
 
-% \part{Appendix}
-\appendix
+\ifthenelse{\equal{\doctype}{book}}{
+  \appendix
+}{}
 
 %=====================================================
 % End Notes
 %=====================================================
 
 \phantomsection
+\ifthenelse{\equal{\doctype}{book}}{
+  \addcontentsline{toc}{chapter}{Notes}
+}{
 \addcontentsline{toc}{section}{Notes}
+}
 \pagestyle{fancy}
 \fancyhead{}
 \fancyhead[RE,RO]{\thepage}
@@ -125,8 +123,10 @@
 \fancyhead[LO]{\slshape REFERENCES}
 \fancyfoot[C]{}
 %\begin{thebibliography}{99}
+\patchcmd{\bibsetup}{\interlinepenalty=5000}{\interlinepenalty=10000}{}{}
 \printbibliography
+%\end{thebibliography}
 %\clearpage{\pagestyle{empty}\cleardoublepage}
-\clearpage
+%\clearpage
 
 

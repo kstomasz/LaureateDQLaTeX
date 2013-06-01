@@ -1,7 +1,8 @@
 %=====================================================
-% Verzeichnisse
+% Listofs
 %=====================================================
 
+\ifthenelse{\boolean{\toc}}{
 \phantomsection
 \pagestyle{fancy}
 \fancyhead{}
@@ -13,6 +14,8 @@
 \pdfbookmark[-1]{\contentsname}{toc}
 \tableofcontents
 \clearpage{\pagestyle{empty}\cleardoublepage}
+}{}
+\ifthenelse{\boolean{\lot}}{
 \phantomsection
 \addcontentsline{toc}{chapter}{List of Tables}
 \pagestyle{fancy}
@@ -23,6 +26,8 @@
 \fancyfoot[C]{}
 \listoftables
 \clearpage{\pagestyle{empty}\cleardoublepage}
+}{}
+\ifthenelse{\boolean{\lof}}{
 \phantomsection
 \addcontentsline{toc}{chapter}{List of Figures}
 \pagestyle{fancy}
@@ -33,6 +38,8 @@
 \fancyfoot[C]{}
 \listoffigures
 \clearpage{\pagestyle{empty}\cleardoublepage}
+}{}
+\ifthenelse{\boolean{\loe}}{
 \phantomsection
 \addcontentsline{toc}{chapter}{List of Exhibits}
 \pagestyle{fancy}
@@ -43,3 +50,4 @@
 \fancyfoot[C]{}
 \listofexhibit
 \clearpage{\pagestyle{empty}\cleardoublepage}
+}{}

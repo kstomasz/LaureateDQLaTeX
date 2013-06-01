@@ -131,6 +131,15 @@ check :
 	# Make sure there's a file wc.tex in tmp
 	#
 	if [ ! -f tmp/wc.tex ]; then touch tmp/wc.tex; fi
+	
+	#
+	# Set flags for runnint tex
+	#
+	if [ "$$submit" == "true" ] ; then \
+		echo "\\providecommand{\\submit}{true}" > tmp/env.tex;\
+	else \
+		echo "\\providecommand{\\submit}{false}" > tmp/env.tex;\
+	fi;
 
 
 #################################################
@@ -190,9 +199,9 @@ pdf : check pdflatex
 pdflatex : check
 	$(MAKE) log msg="make pdflatex" LVL=info
 	if [ "$$verbose" == "1" ] ; then \
-    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document; \
+    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=batchmode -output-directory=$$DEST document.tex; \
   else \
-    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=nonstopmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
+    yes x | pdflatex -shell-escape -enable-write18 -synctex=1 -interaction=batchmode -output-directory=$$DEST document.tex >/dev/null 2>&1; \
   fi; \
   remake=0; \
   if grep -Fq "No file document.acr" $$DEST/document.log; then $(MAKE) acronyms; remake=1; fi; \
@@ -219,9 +228,9 @@ htlatex : check
 	$(MAKE) fromtmp;
 	export DEST=.; \
   if [ "$$verbose" == "1" ] ; then \
-    yes x | htlatex document.tex "cfg/myconfig.cfg"; \
+    yes x | htlatex document.tex "cfg/myconfig.cfg" "" "" "-interaction=batchmode"; \
   else \
-    yes x | htlatex document.tex "cfg/myconfig.cfg" >/dev/null 2>&1; \
+    yes x | htlatex document.tex "cfg/myconfig.cfg" "" "" "-interaction=batchmode" >/dev/null 2>&1; \
   fi; \
   remake=0; \
   $(MAKE) totmp;\
@@ -231,7 +240,6 @@ htlatex : check
   if grep -Fq "No file document.ind" tmp/document.log; then $(MAKE) index;    remake=1; $(MAKE) log msg="Needed to make Index.   " LVL=info; fi; \
   if grep -Fq "Please (re)run Biber" tmp/document.log; then $(MAKE) biber;    remake=1; $(MAKE) log msg="Needed to make Biber.   " LVL=info; fi; \
   if grep -Fq "Please rerun LaTeX"   tmp/document.log; then remake=1; fi; \
-  echo "remake is: $$remake";\
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
   if [ -f tmp/document.pdf ]; then mv tmp/document.pdf . >/dev/null 2>&1; fi;\
   if [ -f tmp/document.synctex.gz ]; then mv tmp/document.synctex.gz . >/dev/null 2>&1; fi;
@@ -350,37 +358,17 @@ wc : check
 			exit; \
 		fi; \
 	fi; \
-  if [ -d sav ]; then\
-    if [ "$$silent" == "1" ] ; then echo "."; else echo "Directory sav exists; exiting."; fi;\
-    exit 1;\
-  fi;\
-  \
-  mkdir sav;\
-  cp -av *tex sav >/dev/null 2>&1;\
-  \
-  cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Discussion Question\}.*?\\section\*\{Discussion Question Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
-  mv chapter_00.new chapter_00.tex;\
-  \
-  cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Assignment\}.*?\\section\*\{Assignment Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
-  mv chapter_00.new chapter_00.tex;\
-  \
-  for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
-  for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
   if [ "$$verbose" == "1" ] ; then \
     $(MAKE) htlatex;\
   else \
     $(MAKE) htlatex >/dev/null 2>&1;\
   fi; \
-  $(MAKE) totmp;\
-  cat $$DEST/document.html | perl -pi -e 's/\\relax//g' > document2.html; \
-  mv document2.html document.html >/dev/null 2>&1;\
+  $(MAKE) fromtmp;\
   if [ "$$verbose" == "1" ] ; then \
-    python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm"; \
+    cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm"; \
   fi; \
-  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" > tmp/wc.log; \
-  python cfg/html2text.py document.html "iso-8859-1" | perl -pi -e 'BEGIN{undef$$/};s%(.*?)(###.*?1 )(.*?)(Words excluding .*)%$$2$$3%s' | perl -pi -e "s%#{3,} %%gm" | perl -pi -e "s%\* %%gm" | wc -w | sed 's/ //g' | tee tmp/wc.tex; \
-  cp -a sav/* . >/dev/null 2>&1;\
-  rm -rf sav >/dev/null 2>&1; \
+  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" > wc.log; \
+  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" | wc -w | sed 's/ //g' | tee wc.tex; \
   $(MAKE) totmp;
 
 
@@ -391,42 +379,25 @@ wc : check
 #################################################
 
 .PHONY: submit
-submit : check
+submit : check wc
 	$(MAKE) log msg="make submit" LVL=info
-	if [ -d sav_submit ]; then\
-    echo Directory sav_submit exists - exiting.;\
-    exit 1;\
-  fi;\
-  \
-  mkdir sav_submit;\
-  cp -av *tex sav_submit >/dev/null 2>&1;\
-  \
-  cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Discussion Question\}.*?\\section\*\{Discussion Question Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
-  mv chapter_00.new chapter_00.tex;\
-  \
-  cat chapter_00.tex | perl -pi -e 'BEGIN{undef$$/};s%(.*)(\\section\*\{Assignment\}.*?\\section\*\{Assignment Answer\})(.*)%$$1$$3%s' > chapter_00.new;\
-  mv chapter_00.new chapter_00.tex;\
-  \
-  export DEST=tmp;\
-  $(MAKE) pdflatex; \
-  $(MAKE) pdflatex; \
+	export DEST=tmp;\
+  $(MAKE) fromtmp; \
+  $(MAKE) pdflatex submit=true; \
+  $(MAKE) pdflatex submit=true; \
   if [ -f tmp/document.pdf -a "$$DEST" == "tmp" ]; then mv tmp/document.pdf .; fi;\
   cp -a document.pdf ~/Desktop >/dev/null 2>&1;\
   open ~/Desktop/document.pdf;\
-  for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#\\vref#\\ref#gs' $$i; done ;\
-  for i in chapter*tex; do perl -pi -e 'BEGIN{undef$$/};s#(\\caption.*?)}.*?(\\caption\*{)(.*?})}#$$1 ($$3)}#msg' $$i; done ;\
   export DEST=.;\
-  $(MAKE) htlatex; \
-  $(MAKE) htlatex; \
+  $(MAKE) totmp;\
+  $(MAKE) htlatex submit=true; \
+  $(MAKE) htlatex submit=true; \
   cat tmp/document.html | perl -pi -e 'BEGIN{undef$$/};s%(.*)(<html.*?<body.*?>)(.*)%$$2<br/><span class="cmr-10">For a well-formatted version, see attached document (link above).</span><br/><br/>$$3%s' > tmp/document_submitted.html;\
   mv tmp/document_submitted.html tmp/document.html;\
   for i in $(*png); do mv $$i tmp/; done; \
   cp -a fig tmp >/dev/null 2>&1;\
   open tmp/document.html;\
-  cp -a sav_submit/* . >/dev/null 2>&1;\
-  rm -rf sav_submit >/dev/null 2>&1; \
-  for i in $(tex-files); do if [ -f "$$i" ]; then mv $$i tmp/; fi; done; \
-
+  $(MAKE) totmp;
 
 
 #################################################

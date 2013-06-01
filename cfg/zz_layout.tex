@@ -4,101 +4,141 @@
 
 \documentclass[12pt,a4paper,fleqn,twoside]{\doctype}	  	
 %\write18{if [ ! -f tmp/wc.tex -o ! -s tmp/wc.tex ] ; then make wc verbose=0 loglvl=error fromtex=1 > tmp/wc.tex ; fi}
+\input{tmp/env.tex}
 
-%-----------------------------------------------------
-% Overall Geometry of the Document
-%-----------------------------------------------------
+%=====================================================
+% Some Helpers
+%=====================================================
 
+\usepackage{lipsum}										% Lorem Impsum...
+\usepackage{xparse}										% Parsing of Parameters
+\usepackage{xifthen}									% If Then Else
+\usepackage{ifpdf}										% Generating PDF or not
+\ifpdf\usepackage{cmap}\fi						% Makes PDF searchable, for Skim
+\usepackage[titles]{tocloft}					% New Listofs...
 
-\usepackage{eurosym}
+%=====================================================
+% Document Geometry
+%=====================================================
 
-\usepackage{xparse}
-\usepackage{xifthen}
-
-
-\usepackage{cmap}
-\usepackage{fix-cm}
 \usepackage[hmarginratio=1:1]{geometry}
-\usepackage{boxedminipage}
-
-\geometry{%
-  left=2.5cm,				% left margin
-  top=3.5cm,				% top  margin
-  textwidth=16cm,		% width of text block
-  textheight=21.0cm}	% height of text block
-\setlength{\headheight}{1cm}					    % height of header
+\geometry{
+  left=2.5cm,													% left margin
+  top=3.5cm,													% top  margin
+  textwidth=16cm,											% width of text block
+  textheight=21.0cm}									% height of text block
+\setlength{\headheight}{1cm}					% height of header
 \setlength{\headsep}{1cm}							% distance of header
-\setlength{\footskip}{1.5cm}					    % distance of footer
-\renewcommand{\baselinestretch}{1.0}     % 1line distance
+\setlength{\footskip}{1.5cm}					% distance of footer
+\renewcommand{\baselinestretch}{1.0}	% 1line distance
+\clubpenalty10000											% Don't want clubss
+\widowpenalty10000										% Don't want widows
+\hbadness 10000												% Reduce underfull hbox warnings
+\sloppy																% Allow sloppy layout, reduce hyphenations
 
-\newlength{\oldabovedisplayskip}
-\setlength{\oldabovedisplayskip}{\abovedisplayskip}
-\setlength{\abovedisplayskip}{0pt}
 
-
-\usepackage{adjustbox}
-
-%----------------------------------------------------- 
+%=====================================================
 % Language
-%-----------------------------------------------------
-\usepackage[english]{varioref}			  
-\usepackage[american]{babel}
-\usepackage[utf8]{inputenc}
-%\usepackage[T1]{fontenc}
-\usepackage{csquotes}  
-\selectlanguage{american}
+%=====================================================
+
+\usepackage[american]{babel}	% Internationalization
+\usepackage[utf8]{inputenc}						% Allow for utf-8 in input files
+%\usepackage[T1]{fontenc}							% Breaks utf-8 in bibliography							
+\usepackage{csquotes}  								% Extended quoting
+\selectlanguage{american}							% Select English
 
 
-%-----------------------------------------------------
+%=====================================================
+% Fixups for HTML
+%=====================================================
+
+\ifthenelse{\equal{\doctype}{book}}{
+\ifpdf
+\else
+  \renewcommand\markboth{\null}				% Markboth makes no sense in HTML
+\fi
+}{}
+
+\ifpdf
+	\usepackage[english]{varioref}			% vref and related	
+\else
+	\usepackage{tex4ht}
+   \newcommand\vref{\ref}							% varioref doesn't work in HTML
+   \newcommand\textwidth{\linewidth}
+\fi
+
+
+%=====================================================
+% Word counting
+%=====================================================
+
+\ifpdf
+\else
+  \def\HCode#1{}											% Allow plain HTML output
+\fi
+\newcommand\wcounta{\ifpdf\else\HCode{<!-- COUNT -->}\fi}
+\newcommand\wcounte{\ifpdf\else\HCode{<!-- /COUNT -->}\fi }
+
+
+%=====================================================
 % Headers
-%-----------------------------------------------------
-\usepackage{fancyhdr}
-\usepackage[Sonny]{sty/fncychap/fncychap}
-\ChNumVar{\fontsize{60}{62}}
+%=====================================================
 
-\usepackage[titles]{tocloft}
+\usepackage{fancyhdr}									% Fancy Page Headers
+\usepackage[Sonny]{fncychap}					% Fancy Chapter Headers
+\ChNumVar{\fontsize{60}{62}}					% Set Font Size for Chapter Headers
 
 
-%-----------------------------------------------------
-% Floats, Tables, Equations
-%-----------------------------------------------------
-\usepackage[hang]{caption}
-\usepackage{capt-of} 
-\usepackage[section] {placeins}
-\usepackage{float}
-\usepackage{colortbl}
-\usepackage{booktabs}
-\usepackage{latexsym}
+%=====================================================
+% Floats, Tables, Equations, etc.
+%=====================================================
 
+\usepackage{boxedminipage}						% Minipage with a box around it
+\usepackage{wrapfig}									% Allow for floats wrapped by text
+\usepackage[hang]{caption}							% captions with hanging indent
+\usepackage{capt-of} 									% caption{figure}[]{}, outside float
+\usepackage[section,above] {placeins}			% Prevent floats floating past the section
+\usepackage{float}											% Improved control over floats
+\usepackage{booktabs}									% Better tables
+\usepackage{adjustbox}								% Flexible boxes, color, rotate, etc.
+\usepackage{fancybox}									% Boxes, also for equations
+\usepackage{array}										% Better tabular and array environments
+\usepackage{colortbl}									% Colored Tables
+\usepackage{color}										% Color functionality
+\usepackage[table]{xcolor}							% Extended color functionality (blue!20 etc.)
+
+
+%
 % Alter some LaTeX defaults for better treatment of figures:
 % See p.105 of "TeX Unbound" for suggested values.
 % See pp. 199-200 of Lamport's "LaTeX" book for details.
-%   General parameters, for ALL pages:
-\renewcommand{\topfraction}{0.9}	% max fraction of floats at top
-\renewcommand{\bottomfraction}{0.8}	% max fraction of floats at bottom
-%   Parameters for TEXT pages (not float pages):
-\setcounter{topnumber}{2}
-\setcounter{bottomnumber}{2}
-\setcounter{totalnumber}{4}     % 2 may work better
-\setcounter{dbltopnumber}{2}    % for 2-column pages
-\renewcommand{\dbltopfraction}{0.9}	% fit big float above 2-col. text
-\renewcommand{\textfraction}{0.07}	% allow minimal text w. figs
-%   Parameters for FLOAT pages (not text pages):
+%  
+% General parameters, for ALL pages:
+%
+\renewcommand{\topfraction}{0.9}			% max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8}		% max fraction of floats at bottom
+%
+% Parameters for TEXT pages (not float pages):
+%
+\setcounter{topnumber}{2}							% max floats at top of page
+\setcounter{bottomnumber}{2}					% max floats at bottom of page
+\setcounter{totalnumber}{4}     					% max floats on page
+\setcounter{dbltopnumber}{2}    					% for 2-column pages
+\renewcommand{\dbltopfraction}{0.9}		% fit big float above 2-col. text
+\renewcommand{\textfraction}{0.07}		% allow minimal text w. figs
+%
+% Parameters for FLOAT pages (not text pages):
+%
 \renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
 % N.B.: floatpagefraction MUST be less than topfraction !!
-\renewcommand{\dblfloatpagefraction}{0.7}	% require fuller float pages
+\renewcommand{\dblfloatpagefraction}{0.7}% require fuller float pages
 % Remember to use [htp] or [htpb] for placement
 
 
+%=====================================================
+% Code Listings
+%=====================================================
 
-
-\usepackage{wrapfig}
-
-\usepackage{lipsum}
-
-%-----------------------------------------------------
-% Listings
-%-----------------------------------------------------
 \usepackage{listings}
 \definecolor{lstemph}{rgb}{0,0.39,0} 
 \definecolor{lstnumbers}{rgb}{0.59,0.57,0.43} 
@@ -122,24 +162,12 @@
         xrightmargin=3.5pt,
         escapeinside={(*}{*)}}
 
-%-----------------------------------------------------
-% Processing of the document
-%-----------------------------------------------------
-% Includex is for combining documents.
-% It is obsolete and throws warnings,
-% so we do not use it as long as we do not
-% need it. See:
-%
-% http://www.tex.ac.uk/cgi-bin/texfaq2html?label=multidoc
-% 
-%\usepackage{sty/includex/includex}
 
-%-----------------------------------------------------
+%=====================================================
 % Hyperref
-%-----------------------------------------------------
-%\ifx\pdfoutput\undefined
-%\usepackage[ps2pdf]{hyperref}
-%\else
+%=====================================================
+
+\ifpdf
 \usepackage[%pdftex,
             pdfpagemode={UseOutlines},
             pdfstartview={FitH},
@@ -154,99 +182,45 @@
             plainpages=false,
             %hypertexnames=false,
             pdfpagelabels]{hyperref} 
+\else
+\usepackage[tex4ht]{hyperref}
+\fi
 
+
+%=====================================================
+% Massively ugly workaround of hyperrefs issues with equations in glossaries
+%=====================================================
 
 %===<exclude> for word count
 
-%%% define a new counter and use it for \theHequation which hyperref uses for the links
-% \newcounter{Hequation}
-% \renewcommand{\theHequation}{\thechapter.\arabic{Hequation}}
-% \makeatletter
-% \g@addto@macro\equations{\stepcounter{Hequation}}
-% \makeatother
-
-
-
-% Manually set the section; set a new 'block'
-%\newcommand{\setgroupingsection}[1]{\setcounter{section}{#1}\setgroupingblock{#1}}
-% Set a 'block' for numbering equations, overriding any section, and resetting the equation counter
-%\newcommand{\setgroupingblock}[1]{\gdef\equationgrouping{#1:}\phantomsection\setcounter{equation}{0}}
-
-% Equation numbering and referencing
-%\renewcommand{\theequation}{\equationgrouping\arabic{equation}}
-% \newcounter{mnbar}
-% \newcommand{\mnfoo}{%
-%         \stepcounter{mnbar}%
-%         \themnbar}
-
-
-%
-% Massively ugly workaround of hyperrefs issues with equations in glossaries
-%
-\makeatletter
-%\renewcommand{\theHequation}{\@currentHref\theHchapter.\theHsection.\equationgrouping\arabic{equation}}
-\renewcommand{\theHequation}{\@currentHref.\arabic{equation}}
-\gdef\equationgrouping{}
-\makeatother
-
-% 
-% \makeatletter
-% \renewcommand*{\glshyperlink}[2][\gls{\@glo@label}]{%
-% \def\@glo@label{#2}%
-% \@glslink{glo:#2}{#1}}
-% \makeatother
-
- %\renewcommand\pagenumbering[1]{}
-%\renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
-
-% \renewcommand*\frontmatter{%
-%  \setcounter{chapter}{0}%
-%  \renewcommand\theHchapter{front.\arabic{chapter}}}
-%  
-%  \renewcommand*\backmatter{%
-%  \setcounter{chapter}{0}%
-%  \renewcommand\theHchapter{back.\arabic{chapter}}}
-%   
-%  \renewcommand*\mainmatter{%
-%  \setcounter{chapter}{0}%
-%  \renewcommand\theHchapter{main.\arabic{chapter}}} 
-  
-% \renewcommand{\theequation}{\equationgrouping\arabic{equation}}
-% \gdef\equationgrouping{}
-%\renewcommand{\theHequation}{\theHsection.\equationgrouping\arabic{equation}}
-
+\ifpdf
+  \makeatletter
+  \renewcommand{\theHequation}{\@currentHref.\arabic{equation}}
+  \gdef\equationgrouping{}
+  \makeatother
+\fi
 
 %===</exclude>
 
-%-----------------------------------------------------
-% Nomenclature / Glossary
-%-----------------------------------------------------
 
-%\usepackage[
-%  style=altlist,
-%  hypertoc=true,
-%   hyper=true,
-%   number=none,
-%   hyperacronym=true,
-%   acronym=true %dieser Parameter ist der wichtige
-% ]{sty/glossary/glossary}
-% \setacronymnamefmt{\gloshort}
-% \makeglossary
-% \makeacronym
+%=====================================================
+% Glossaries
+%=====================================================
 
 \usepackage[
-nonumberlist, %do not show page numbers
-acronym,        %generate acronym listing
-toc,                %show listings as entries in table of contents
-section]         %use section level for toc entries
+nonumberlist, 													% do not show page numbers
+acronym,        													% generate acronym listing
+toc,                													% show listings as entries in table of contents
+section]         													% use section level for toc entries
 {glossaries}
 
 %
-% Patch Glossaries so that only the first occurrence of a given glossary entry
-% is converted to a hyperlink, in order to avoid cluttering.
+% Patch Glossaries so that only the first occurrence of a given glossary
+% entry is converted to a hyperlink, in order to avoid cluttering.
 %
 \makeatletter
-%% patch first occurence of "\@gls@link[#1]{#2}{\@glo@text}", as this is the one for \glsused{#2}
+%% patch first occurence of "\@gls@link[#1]{#2}{\@glo@text}", 
+%% as this is the one for \glsused{#2}
 \patchcmd{\@gls@}
   {\@gls@link[#1]{#2}{\@glo@text}}
   {\@gls@link[#1,hyper=false]{#2}{\@glo@text}}
@@ -305,15 +279,33 @@ section]         %use section level for toc entries
 %makeindex -s document.ist -t document.slg -o document.syi document.syg
 %makeindex document
 
-%-----------------------------------------------------
+
+%=====================================================
 % Index
-%-----------------------------------------------------
+%=====================================================
 
 \usepackage{makeidx}
 
-%-----------------------------------------------------
+
+%=====================================================
+% Graphics
+%=====================================================
+\usepackage{graphicx}
+\ifpdf
+  \graphicspath{{pdf/}}
+  \pdfcompresslevel=9
+  \DeclareGraphicsExtensions{.pdf}
+  \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{}
+\else
+  \graphicspath{{eps/}}
+  \DeclareGraphicsExtensions{.eps}
+  \DeclareGraphicsRule{.eps}{eps}{.eps}{}
+\fi
+
+
+%=====================================================
 % Media
-%-----------------------------------------------------
+%=====================================================
 
 %\renewcommand{\video}[6]{% file xpos ypos width height controls
 %  \vspace{#3}\hspace{#2}{\pdfannot width #4 height #5 depth 0cm {%
@@ -326,26 +318,34 @@ section]         %use section level for toc entries
 \usepackage{sty/easymovie/easymovie}
 
 
-%-----------------------------------------------------
+%=====================================================
 % Equations
-%-----------------------------------------------------
+%=====================================================
 
-\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{amssymb}
-\mathtoolsset{showonlyrefs}
+\usepackage[fleqn,tbtags]{mathtools}			% Mathematical Processing
+\usepackage{amssymb}									% Scientific Symbols
+\usepackage{latexsym}									%	Scientific Symbols
+\mathtoolsset{showonlyrefs}						% Label only (eqref) referenced Equations 
+%\everymath{\rm}											% Default to roman style
 
-%
-% Default to roman style
-%
-%\everymath{\rm}
+\usepackage[customcolors]{hf-tikz}				% Highlight Formulas
+\usetikzlibrary{calc}
+\tikzstyle{every picture}+=[remember picture]
+\hfsetfillcolor{blue!10}
+\hfsetbordercolor{blue}
 
 
-
-
-
-%-----------------------------------------------------
+%=====================================================
 % Font Settings
-%-----------------------------------------------------
+%=====================================================
+
+\usepackage{microtype}								% More precise typography
+\usepackage{fix-cm}										% Permit arbitrary font sizes
+\usepackage{eurosym}									% Euro Symbol
+
+%
+% Specify fonts for Captions, Sectionts, etc.
+%
 \renewcommand*\captionlabelfont{\bfseries}	
 \renewcommand*\captionsize{\itshape}		
 
@@ -369,106 +369,69 @@ section]         %use section level for toc entries
   {\normalfont\normalsize\it}}     
 \makeatother
 
-%-----------------------------------------------------
-% Itemizes etc.
-%-----------------------------------------------------
+%
+% Itemizes
+%
 \renewcommand{\labelitemi}{$\triangleright$}
 \renewcommand*\descriptionlabel[1]{\hspace\labelsep
                                 \normalfont\itshape #1}
 
-%-----------------------------------------------------
-% Widow etc. compensations
-%-----------------------------------------------------
-\clubpenalty10000					
-\widowpenalty10000					
-\hbadness 10000
-\scrollmode
-\sloppy
+%
+% Save Default Space above Itemize etc., then set it to 0
+%
+% Not resetting, need further investigation.
+%
+% \newlength{\oldabovedisplayskip}
+% \setlength{\oldabovedisplayskip}{\abovedisplayskip}
+% %\setlength{\abovedisplayskip}{0pt}
+% \expandafter\def\expandafter\normalsize\expandafter{%
+% \normalsize\setlength\oldabovedisplayskip{\abovedisplayskip}}
+% \expandafter\def\expandafter\normalsize\expandafter{%
+% \normalsize\setlength\abovedisplayskip{0pt}}
+% \expandafter\def\expandafter\normalsize\expandafter{%
+% \normalsize\setlength\abovedisplayskip{\oldabovedisplayskip}}
 
 
-%-----------------------------------------------------
-% Depth of Table of Contents
-%-----------------------------------------------------
-\setcounter{secnumdepth}{10}				
-\setcounter{tocdepth}{3}
+%=====================================================
+% Table of... / Listofs
+%=====================================================
 
-%-----------------------------------------------------
-% PDF or not
-%-----------------------------------------------------
-\usepackage{ifpdf}
+\usepackage[titles]{tocloft}							% New Listofs...
+\setcounter{secnumdepth}{10}						% Section numbers down to level 10
+\setcounter{tocdepth}{3}								% TOC content down to level 3
+
+%
+% Give some more room for page numbers
+%
+\makeatletter
+\renewcommand{\@pnumwidth}{3em} 
+\renewcommand{\@tocrmarg}{4em}
+\makeatother
 
 
-%-----------------------------------------------------
-% Footnotes
-%-----------------------------------------------------
-\usepackage[flushmargin, hang]{footmisc}		
-\usepackage{sty/botfnote/botfnote}
-%\usepackage{endnotes}
-\usepackage[backref,counter-format=Roman]{sty/enotez/enotez}
+%=====================================================
+% Footnotes / Endnotes
+%=====================================================
 
-%Disable to have actual footnotes
-%\let\footnote=\endnote
-%\let\footnotemark=\endnotemark
-%\let\footnotetext=\endnotetext
- %remember to substitute \value{footnote} by \endnote or vice versa
+\usepackage[flushmargin, hang]{footmisc}	% More footnote options
+\usepackage{sty/botfnote/botfnote}				% Force footnotes to the bottom
+\usepackage[backref,counter-format=arabic]{sty/enotez/enotez} % Backreferencing Endnotes
  
 \ifpdf
-  \usepackage{sty/hyperendnote/hyperendnote}  
+  \usepackage{sty/hyperendnote/hyperendnote} %  Referenced Endnotes
 \fi
 
-%\renewcommand\enoteformat{\noindent
-%\setlength\parindent{12pt}\makebox[0pt][r]{\hyperlink{Hendnotepage.\theenmark}{%
-% \hbox{$^{\theenmark}$}}\,}}
-%\renewcommand\enotesize{\scriptsize}
 
-%\renewcommand\enoteformat{\noindent
-%\leftskip=-2.5em \makebox[2.5em][r]{\theenmark.\ }\hangindent 2.5em}
+\usepackage{setspace}
 
+\DeclareInstance{enotez-list}{itemize}{list}{
+  list-type = itemize,
+  number = \enmark{#1} ,
+  format = \footnotesize,
+}
 
-%-----------------------------------------------------
-% Graphics
-%-----------------------------------------------------
-\usepackage{graphicx}
-\ifpdf
-  \graphicspath{{pdf/}}
-  \pdfcompresslevel=9
-  \DeclareGraphicsExtensions{.pdf}
-  \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{}
-\else
-  \graphicspath{{eps/}}
-  \DeclareGraphicsExtensions{.eps}
-  \DeclareGraphicsRule{.eps}{eps}{.eps}{}
-\fi
+%=====================================================
+% Load Macros
+%=====================================================    
 
-%\ifx\pdfoutput\undefined
-%\usepackage[dvips]{graphicx}
-% \graphicspath{{eps/}}
-% \DeclareGraphicsExtensions{.eps}
-% \DeclareGraphicsRule{.eps}{eps}{.eps}{}
-% \else
-% \usepackage[pdftex]{graphicx} 
-% \graphicspath{{pdf/}}
-% \pdfcompresslevel=9
-% \DeclareGraphicsExtensions{.pdf}
-% \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{}
-% \fi
-
-\usepackage{fancybox}
-\usepackage{color}
-\usepackage[table]{xcolor}
-\usepackage{array}
-\usepackage[customcolors]{hf-tikz}
-
-
-\usetikzlibrary{calc}
-\tikzstyle{every picture}+=[remember picture]
-\hfsetfillcolor{blue!10}
-\hfsetbordercolor{blue}
-
-\usepackage{microtype}
-    
-
-%-----------------------------------------------------
-% Makros
-%-----------------------------------------------------
 \input{cfg/zz_macros}

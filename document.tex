@@ -2,7 +2,25 @@
 % Specify the document type (book, article)
 %=====================================================
 
-\newcommand{\doctype}{book}
+\newcommand{\doctype}{article}							% book or article
+
+%=====================================================
+% Specify part names (only for books)
+%=====================================================
+
+\newcommand\parta{Audit Report}
+
+
+%=====================================================
+% Specify which lists you want
+%=====================================================
+
+\newcommand\listofs{true}									% Any ``ListOfs?''
+\newcommand\toc{true}										% Table of Contents
+\newcommand\lot{true}										% List of Tables
+\newcommand\lof{true}										% List of Figures
+\newcommand\loe{true}										% List of Exhibits
+\newcommand\lod{true}										% Include Distribution List
 
 %=====================================================
 % Load the main layout file
@@ -23,7 +41,7 @@
 \addbibresource{Bibliography.bib}  
 \input{cfg/zz_config_bib}
 
-   
+
 %=====================================================
 % Document Content
 %=====================================================
@@ -49,40 +67,75 @@
 % Document Front Matter
 %=====================================================
 
+\scrollmode
+\ifthenelse{\equal{\doctype}{book}}{
 \frontmatter
-  \include{00_titlepage}
+}{}
+
+\include{00_titlepage}
+
+\ifthenelse{\equal{\doctype}{book}}{
   \pagenumbering{Roman}
   \include{01_mgmtsummary}
-  \include{02_distribution}
-  \include{03_listofs} 
+  \ifthenelse{\equal{\lod}{true}}{\include{02_distribution}}{}
   
+  \ifthenelse{\boolean{\listofs}}{\input{cfg/zz_listofs}}{} 
+}{}  
 
 %=====================================================
 % Include Content
 %=====================================================
 
+\ifthenelse{\equal{\doctype}{book}}{
 \mainmatter
   \pagenumbering{arabic}
-  \part{Audit Report}\label{audit_report}
-  \include{chapter_00} 
+  \part{\parta}\label{part:a}
+  \include{chapter_00}
+  \wcounta
   \include{chapter_01}
   \include{chapter_02}
   \include{chapter_03}
   \include{chapter_04}
   \include{chapter_05}
+  \wcounte 
+  }{
+  \input{chapter_00} 
+  \wcounta 
+  \input{chapter_01}
+  \input{chapter_02}
+  \input{chapter_03}
+  \input{chapter_04}
+  \input{chapter_05}
+  \wcounte 
+}
+
+%=====================================================
+% Word Count
+%=====================================================
+
+%\bigskip \hfill \emph{\input{tmp/wc.tex}}\emph{Words} excluding front matter, exhibits, %notes and appendices.\bigskip
+
 
 %=====================================================
 % Include Appendices
 %=====================================================
 
+\input{chapter_a4_static}
+
 \makeatletter
+\ifthenelse{\equal{\doctype}{book}}{
 \@openrightfalse
 \part{Appendix}
-\setlength{\abovedisplayskip}{\oldabovedisplayskip}
 
- \appendix\input{cfg/zz_appendices} 
+
+ \appendix
+ \input{cfg/zz_appendices} 
 
 \@openrighttrue
+\batchmode
+}{
+\input{cfg/zz_appendices} 
+}
 \makeatother
 
 
