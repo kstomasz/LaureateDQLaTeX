@@ -176,7 +176,7 @@ to0pt{\hskip-
 % 
 % Donec felis erat, congue non, volutpat at, tincidunt tristique, 
 % \end{exhibit}
-%
+% \ref{exhibit:Price_Adjusted_CVP}
 %-----------------------------------------------------
 \ifpdf
 \definecolor{exhibittitlebackground}{rgb}{.698,.780,.7411}
@@ -200,6 +200,8 @@ to0pt{\hskip-
 \makeatletter
 \NewDocumentEnvironment{exhibit}{O{} m O{} O{.5} O{o}}{%
 \refstepcounter{exhibit}%
+\StrSubstitute[0]{#2}{ }{_}[\m@label]%
+\label{exhibit:\m@label}%
 %
 % If first parameter is empty, utilize caption for list of exhibits
 %
