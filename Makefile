@@ -491,6 +491,7 @@ tex-files =	\
 	*.lof	\
 	*.log	\
 	*.lot	\
+	*.mw	\
 	*.odt	\
 	*.out	\
 	*.png	\

@@ -10,12 +10,14 @@
 % Some Helpers
 %=====================================================
 
+\usepackage{morewrites}								% More write space
 \usepackage{lipsum}										% Lorem Impsum...
 \usepackage{xparse}										% Parsing of Parameters
-\usepackage{xifthen}									% If Then Else
+\usepackage{xifthen}										% If Then Else
 \usepackage{ifpdf}										% Generating PDF or not
-\ifpdf\usepackage{cmap}\fi						% Makes PDF searchable, for Skim
-\usepackage[titles]{tocloft}					% New Listofs...
+\ifpdf\usepackage{cmap}\fi							% Makes PDF searchable, for Skim
+\usepackage{xstring}										% String functions
+\usepackage[titles]{tocloft}							% New Listofs...
 
 %=====================================================
 % Document Geometry
@@ -26,23 +28,23 @@
   left=2.5cm,													% left margin
   top=3.5cm,													% top  margin
   textwidth=16cm,											% width of text block
-  textheight=21.0cm}									% height of text block
-\setlength{\headheight}{1cm}					% height of header
+  textheight=21.0cm}										% height of text block
+\setlength{\headheight}{1cm}						% height of header
 \setlength{\headsep}{1cm}							% distance of header
-\setlength{\footskip}{1.5cm}					% distance of footer
-\renewcommand{\baselinestretch}{1.0}	% 1line distance
+\setlength{\footskip}{1.5cm}						% distance of footer
+\renewcommand{\baselinestretch}{1.0}		% 1line distance
 \clubpenalty10000											% Don't want clubss
 \widowpenalty10000										% Don't want widows
 \hbadness 10000												% Reduce underfull hbox warnings
-\sloppy																% Allow sloppy layout, reduce hyphenations
+\sloppy															% Allow sloppy layout, reduce hyphenations
 
 
 %=====================================================
 % Language
 %=====================================================
 
-\usepackage[american]{babel}	% Internationalization
-\usepackage[utf8]{inputenc}						% Allow for utf-8 in input files
+\usepackage[american]{babel}						% Internationalization
+\usepackage[utf8]{inputenc}							% Allow for utf-8 in input files
 %\usepackage[T1]{fontenc}							% Breaks utf-8 in bibliography							
 \usepackage{csquotes}  								% Extended quoting
 \selectlanguage{american}							% Select English
@@ -55,12 +57,12 @@
 \ifthenelse{\equal{\doctype}{book}}{
 \ifpdf
 \else
-  \renewcommand\markboth{\null}				% Markboth makes no sense in HTML
+  \renewcommand\markboth{\null}			% Markboth makes no sense in HTML
 \fi
 }{}
 
 \ifpdf
-	\usepackage[english]{varioref}			% vref and related	
+	\usepackage[english]{varioref}					% vref and related	
 \else
 	\usepackage{tex4ht}
    \newcommand\vref{\ref}							% varioref doesn't work in HTML
