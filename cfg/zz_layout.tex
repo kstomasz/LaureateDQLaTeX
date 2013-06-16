@@ -164,6 +164,30 @@
         xrightmargin=3.5pt,
         escapeinside={(*}{*)}}
 
+%=====================================================
+% Footnotes / Endnotes
+%=====================================================
+
+\usepackage{sty/botfnote/botfnote}				% Force footnotes to the bottom
+%\usepackage[flushmargin,hang]{footmisc}	% More footnote options
+\usepackage[backref,counter-format=arabic]{sty/enotez/enotez} % Backreferencing Endnotes
+ 
+\ifpdf
+  \usepackage{sty/hyperendnote/hyperendnote} %  Referenced Endnotes
+\fi
+
+\usepackage{setspace}
+
+\DeclareInstance{enotez-list}{itemize}{list}{
+  list-type = itemize,
+  number = \enmark{#1} ,
+  format = \footnotesize,
+}
+
+\renewcommand*{\thefootnote}{[\arabic{footnote}]}
+
+\usepackage[flushmargin,hang]{footmisc}	% More footnote options
+
 
 %=====================================================
 % Hyperref
@@ -179,6 +203,7 @@
             urlcolor={blue},
             bookmarks=true,
             bookmarksopen=true,
+            %hyperfootnotes=false,
             %pdfpagemode=FullScreen,
             %hyperindex=false,
             plainpages=false,
@@ -188,6 +213,7 @@
 \usepackage[tex4ht]{hyperref}
 \fi
 
+\usepackage{footnotebackref}
 
 %=====================================================
 % Massively ugly workaround of hyperrefs issues with equations in glossaries
@@ -372,6 +398,18 @@ section]         													% use section level for toc entries
 \makeatother
 
 %
+% And for Glossaries:
+%
+\makeatletter
+\newcommand{\glosection}{\@startsection{section}{1}{\z@}%
+    {-2.2ex \@plus-1ex \@minus -.2ex}{1.3ex \@plus.2ex}%
+    {\reset@font\normalfont\sc}}
+\newcommand{\glosubsection}{\@startsection{subsection}{2}{\z@}%
+    {-1.5ex \@plus -1ex \@minus-.2ex}{0.8ex \@plus.2ex}%
+    {\reset@font\normalsize\itshape}}
+\makeatother
+
+%
 % Itemizes
 %
 \renewcommand{\labelitemi}{$\triangleright$}
@@ -411,26 +449,7 @@ section]         													% use section level for toc entries
 \makeatother
 
 
-%=====================================================
-% Footnotes / Endnotes
-%=====================================================
 
-\usepackage[flushmargin, hang]{footmisc}	% More footnote options
-\usepackage{sty/botfnote/botfnote}				% Force footnotes to the bottom
-\usepackage[backref,counter-format=arabic]{sty/enotez/enotez} % Backreferencing Endnotes
- 
-\ifpdf
-  \usepackage{sty/hyperendnote/hyperendnote} %  Referenced Endnotes
-\fi
-
-
-\usepackage{setspace}
-
-\DeclareInstance{enotez-list}{itemize}{list}{
-  list-type = itemize,
-  number = \enmark{#1} ,
-  format = \footnotesize,
-}
 
 %=====================================================
 % Load Macros
