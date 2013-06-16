@@ -27,7 +27,7 @@
 \fancyhead[LO]{\slshape NOTES}
 \fancyfoot[C]{}
 %\theendnotes \setcounter{endnote}{0}
-\printendnotes 
+\label{sec:notes}\printendnotes 
 %\setcounter{endnote}{0}
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
@@ -51,9 +51,9 @@
 %\printglossary[type=\acronymtype]
 %Print list of acronyms
 %\deftranslation[to=German]{Acronyms}{Abkürzungsverzeichnis}
-\printglossary[type=\acronymtype,style=long]
+\label{sec:acronyms}\printglossary[type=\acronymtype,style=long]
 %Print list of symbols
-\printglossary[type=symbolslist,style=long]
+\label{sec:symbols}\printglossary[type=symbolslist,style=long]
 
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
@@ -73,7 +73,7 @@
 \fancyfoot[C]{}
 %\printglossary
 %\printglossary[type=main]
-\printglossary[style=altlist,title=Glossary]
+\label{sec:glossary}\printglossary[style=altlist,title=Glossary]
 
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
@@ -106,7 +106,7 @@
 
 \phantomsection
 \addcontentsline{toc}{section}{Index}
-\printindex
+\label{sec:index}\printindex
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 \clearpage
 
@@ -124,7 +124,7 @@
 \fancyfoot[C]{}
 %\begin{thebibliography}{99}
 \patchcmd{\bibsetup}{\interlinepenalty=5000}{\interlinepenalty=10000}{}{}
-\printbibliography
+\label{sec:bibliography}\printbibliography
 %\end{thebibliography}
 %\clearpage{\pagestyle{empty}\cleardoublepage}
 %\clearpage

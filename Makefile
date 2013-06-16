@@ -365,10 +365,10 @@ wc : check
   fi; \
   $(MAKE) fromtmp;\
   if [ "$$verbose" == "1" ] ; then \
-    cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm"; \
+    cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" | perl -pi -e "s%\\[\\[.*?\\)%%gm"; \
   fi; \
-  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" > wc.log; \
-  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" | wc -w | sed 's/ //g' | tee wc.tex; \
+  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" | perl -pi -e "s%\\[\\[.*?\\)%%gm" > wc.log; \
+  cat document.html | perl -pi -e 'BEGIN{undef$$/};s%<!-- COUNT -->%##COUNT##%sg'| perl -pi -e 'BEGIN{undef$$/};s%<!-- /COUNT -->%##/COUNT##%sg' | python cfg/html2text.py | perl -0777 -ne 'print "$$1\n" while /##COUNT##(.*?)##\/COUNT##/gs'| perl -pi -e 'BEGIN{undef$$/};s%##COUNT##%%sg' | perl -pi -e 'BEGIN{undef$$/};s%##/COUNT##%%sg' | perl -pi -e "s%#{1,} %%gm"| perl -pi -e "s%\* %%gm" | perl -pi -e "s%\\[\\[.*?\\)%%gm" | wc -w | sed 's/ //g' | tee wc.tex; \
   $(MAKE) totmp;
 
 
