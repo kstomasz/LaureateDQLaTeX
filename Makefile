@@ -259,9 +259,21 @@ makeindex :
   fi; \
   if [ -f $$DEST/document.$$INDEXFILE ] ; then \
   	if [ "$$verbose" == "1" ] ; then \
+      if [ "$$INDEXFILE" == "idx" ] ; then \
+        makeindex $$DEST/document.idx; \
+      fi; \
       makeindex -s $$DEST/document.ist -t $$DEST/document.$$LOGFILE -o $$DEST/document.$$OUTFILE $$DEST/document.$$INDEXFILE; \
+      if [ "$$INDEXFILE" == "idx" ] ; then \
+        makeindex $$DEST/document.idx; \
+      fi; \
     else \
+      if [ "$$INDEXFILE" == "idx" ] ; then \
+        makeindex $$DEST/document.idx >/dev/null 2>&1; \
+      fi; \
       makeindex -s $$DEST/document.ist -t $$DEST/document.$$LOGFILE -o $$DEST/document.$$OUTFILE $$DEST/document.$$INDEXFILE >/dev/null 2>&1; \
+      if [ "$$INDEXFILE" == "idx" ] ; then \
+        makeindex $$DEST/document.idx >/dev/null 2>&1; \
+      fi; \
     fi; \
   fi;
 
@@ -414,7 +426,7 @@ clean :
 	# Remove all files matching pattern in tex-files
 	#
 	for i in $(tex-files); do \
-		for f in `find . -name "$$i"|grep -v .git`; do \
+		for f in `find . -name "$$i"|grep -v .git|grep -v .png`; do \
 			rm -f $$f;\
 		done;\
 	done;
