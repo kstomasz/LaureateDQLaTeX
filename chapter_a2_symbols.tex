@@ -48,6 +48,714 @@
 %-----------------------------------------------------
 
 
+%-----------------------------------------------------
+% AP
+%-----------------------------------------------------
+
+\def\glosdescap{Also called \emph{Actual Rate}. This is a 
+calculated value that describes the price, or rate, of a given
+cost factor, such as nursing, on an per-hour basis. As an \emph{actual}
+value, it is calculated as follows:
+ 
+\begin{equation}
+   AP = \frac{\text{Actual Costs}}{\text{Total Actual Hours}}
+\end{equation} 
+}
+\newglossaryentry{glos:ap}{
+  name=Actual Price,
+  description={\glosdescap}
+}
+\def\symbdescap{See \glslink{glos:ap}{Actual Price}.}
+\newglossaryentry{symb:ap}{
+  type=symbolslist,
+  name=AP,
+  description={\symbdescap},
+  sort=symbolap
+}
+
+%-----------------------------------------------------
+% AQ
+%-----------------------------------------------------
+\def\glosdescaq{This is a 
+measured value that describes the \emph{actual} quantity
+of a product in monetary terms; for observations of working
+hours, it is typically called  \emph{Actual Time}.
+}
+\newglossaryentry{glos:aq}{
+  name=Actual Quantity,
+  description={\glosdescaq}
+}
+\def\symbdescaq{See \glslink{glos:aq}{Actual Quantity}.}
+\newglossaryentry{symb:aq}{
+  type=symbolslist,
+  name=AQ,
+  description={\symbdescaq},
+  sort=symbolaq
+}
+
+
+%-----------------------------------------------------
+% SP
+%-----------------------------------------------------
+
+\def\glosdescsp{Also called \emph{Standard Rate}. This is a 
+calculated value that describes the price, or rate, of a given
+cost factor, such as nursing, on an per-hour basis. As a \emph{standard},
+or \emph{budgeted} value, it is calculated as follows:
+ 
+\begin{equation}
+   SP = \frac{\text{Budgeted Costs}}{\text{Total Budgeted Hours}}
+\end{equation} 
+}
+\newglossaryentry{glos:sp}{
+  name=Standard Price,
+  description={\glosdescsp}
+}
+\def\symbdescsp{See \glslink{glos:sp}{Standard Price}.}
+\newglossaryentry{symb:sp}{
+  type=symbolslist,
+  name=SP,
+  description={\symbdescsp},
+  sort=symbolsp
+}
+
+
+
+%-----------------------------------------------------
+% SQ
+%-----------------------------------------------------
+\def\glosdescsq{This is a 
+measured value that describes the \emph{budgeted} quantity
+of a product in monetary terms; for observations of working
+hours, it is typically called  \emph{Standard Time}.
+If the \glslink{glos:ao}{actual output} differs
+significantly from the \glslink{glos:so}{budgeted output},
+it is necessary to utilize \glslink{glos:rsq}{Revised Standard Quantity}
+instead.
+}
+\newglossaryentry{glos:sq}{
+  name=Standard Quantity,
+  description={\glosdescsq}
+}
+\def\symbdescsq{See \glslink{glos:sq}{Standard Quantity}.}
+\newglossaryentry{symb:sq}{
+  type=symbolslist,
+  name=SQ,
+  description={\symbdescsq},
+  sort=symbolsq
+}
+
+%-----------------------------------------------------
+% RSQ
+%-----------------------------------------------------
+\def\glosdescrsq{This is a calculated value that
+describes the \emph{budgeted} quantity of a  
+product in monetary terms, corrected by the
+ratio of \glslink{glos:ao}{actual output} to
+\glslink{glos:so}{budgeted output}. For observations
+of working hours, it is typically called \emph{Revised Standard Time}.
+It is calculated as follows:
+ 
+\begin{equation}
+  RSQ = \glslink{symb:sq}{SQ} \: \frac{\glslink{symb:ao}{AO}}{\glslink{symb:so}{SO}}
+\end{equation} 
+
+Since the equation resolves to the value of \glslink{symb:sq}{SQ} if
+\glslink{symb:ao}{AO} and \glslink{symb:so}{SO} are identical,
+RSQ  should always be used instead of \glslink{symb:sq}{SQ}.
+}
+\newglossaryentry{glos:rsq}{
+  name=Revised Standard Quantity,
+  description={\glosdescrsq}
+}
+\def\symbdescrsq{See \glslink{glos:rsq}{Revised Standard Quantity}.}
+\newglossaryentry{symb:rsq}{
+  type=symbolslist,
+  name=RSQ,
+  description={\symbdescrsq},
+  sort=symbolrsq
+}
+
+%-----------------------------------------------------
+% SO
+%-----------------------------------------------------
+\def\glosdescso{Also called \emph{Standard Yield}. This is a 
+measured value that describes the \emph{budgeted} output,
+in terms of quantity, of a given activity. 
+}
+\newglossaryentry{glos:so}{
+  name=Standard Output,
+  description={\glosdescso}
+}
+\def\symbdescso{See \glslink{glos:so}{Standard Output}.}
+\newglossaryentry{symb:so}{
+  type=symbolslist,
+  name=SO,
+  description={\symbdescso},
+  sort=symbolso
+}
+
+%-----------------------------------------------------
+% AO
+%-----------------------------------------------------
+\def\glosdescao{Also called \emph{Actual Yield}. This is a 
+measured value that describes the \emph{actual} output,
+in terms of quantity, of a given activity.  
+}
+\newglossaryentry{glos:ao}{
+  name=Actual Output,
+  description={\glosdescao}
+}
+\def\symbdescao{See \glslink{glos:ao}{Actual Output}.}
+\newglossaryentry{symb:ao}{
+  type=symbolslist,
+  name=AO,
+  description={\symbdescao},
+  sort=symbolao
+}
+
+%-----------------------------------------------------
+% TPU
+%-----------------------------------------------------
+\def\glosdesctpu{Also called \emph{Productivity}. This is a 
+\emph{measured} value that describes the time required to
+produce one unit of output.
+}
+\newglossaryentry{glos:tpu}{
+  name=Time per Unit,
+  description={\glosdesctpu}
+}
+\def\symbdesctpu{See \glslink{glos:tpu}{Time per Unit}.}
+\newglossaryentry{symb:tpu}{
+  type=symbolslist,
+  name=TPU,
+  description={\symbdesctpu},
+  sort=symboltpu
+}
+
+%-----------------------------------------------------
+% OCV
+%-----------------------------------------------------
+\def\glosdescocv{This is a 
+calculated value describes the difference between
+\emph{actual}  expenses and \emph{budgeted}
+expenses in monetary terms.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012locv}.}
+ 
+\begin{equation}
+   OCV = \glslink{symb:rsq}{RSQ} \times \glslink{symb:sp}{SP} -
+                              \glslink{symb:aq}{AQ} \times \glslink{symb:sp}{AP}
+\end{equation} 
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable}. It is considered to be in the responsibility of
+\emph{departmental management}  as far as they are able to exert control over the costs contributing to
+the variance.
+\end{dangerous}
+}
+\newglossaryentry{glos:ocv}{
+  name=Overhead Controllable Variance,
+  description={\glosdescocv}
+}
+\def\symbdescocv{See \glslink{glos:ocv}{Overhead Controllable Variance}.}
+\newglossaryentry{symb:ocv}{
+  type=symbolslist,
+  name=OCV,
+  description={\symbdescocv},
+  sort=symbolocv
+}
+
+%-----------------------------------------------------
+% OVV
+%-----------------------------------------------------
+\def\glosdescovv{This is a 
+calculated value that describes the difference between the \emph{budget}  allowed
+and the \emph{budgeted}  expenses to the \emph{actual} work in progress.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012ovv}.}
+ 
+\begin{equation}
+   OVV = \glslink{symb:sp}{SP}_{fixed\:costs} \times \left( \glslink{symb:ao}{AO} \times
+   \glslink{symb:tpu}{Productivity} - \glslink{symb:rsq}{RSQ}   \right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable}. In that case, the value expresses the cost of 
+capacity available but not utilized efficiently. It is considered to be in the responsibility of
+\emph{executive management}  and \emph{departmental management}.
+\end{dangerous}
+}
+\newglossaryentry{glos:ovv}{
+  name=Overhead Volume Variance,
+  description={\glosdescovv}
+}
+\def\symbdescovv{See \glslink{glos:ovv}{Overhead Volume Variance}.}
+\newglossaryentry{symb:ovv}{
+  type=symbolslist,
+  name=OVV,
+  description={\symbdescovv},
+  sort=symbolovv
+}
+
+%-----------------------------------------------------
+% OSV
+%-----------------------------------------------------
+\def\glosdescosv{This is a 
+calculated value that describes the difference between the \emph{actual}
+expenses expenses and the \emph{budget} allowed based on the \emph{actual}
+quantity produced or hours worked, respectively.   
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012osv}.}
+ 
+\begin{equation}
+  OSV = \glslink{symb:aq}{AQ} \times \glslink{symb:ap}{AP} -
+              \glslink{symb:aq}{AQ} \times \glslink{symb:ap}{AP}_{overhead} -
+              \text{Actual Variable Costs}
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable}. It is considered to be in the area of
+responsibility of the \emph{department manager} who has to keep actual expenses
+within budgeted limits.
+\end{dangerous}
+}
+\newglossaryentry{glos:osv}{
+  name=Overhead Spending Variance,
+  description={\glosdescosv}
+}
+\def\symbdescosv{See \glslink{glos:osv}{Overhead Spending Variance}.}
+\newglossaryentry{symb:osv}{
+  type=symbolslist,
+  name=OSV,
+  description={\symbdescosv},
+  sort=symbolosv
+}
+
+
+%-----------------------------------------------------
+% OEV
+%-----------------------------------------------------
+\def\glosdescoev{This is a 
+calculated value that describes the difference between the \emph{actual}
+expenses expenses and the \emph{budget} allowed based on the \emph{actual}
+quantity produced or hours worked, respectively.   
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012oev}.}
+ 
+\begin{equation}
+  OEV = \left( \glslink{symb:ap}{AP}_{overhead} + \glslink{symb:sp}{SP}_{fixed\:costs} \right) \times
+              \left(  \glslink{symb:aq}{AQ} - \glslink{symb:ao}{AO} \times
+              \glslink{symb:tpu}{Productivity}  \right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically caused by inefficiencies
+such as inexperienced labor, changes in operations, introduction of new procedures, 
+work tools or materials. It is considered to be in the area of
+responsibility of the \emph{department manager}.
+\end{dangerous}
+}
+\newglossaryentry{glos:oev}{
+  name=Overhead Efficiency Variance,
+  description={\glosdescoev}
+}
+\def\symbdescoev{See \glslink{glos:oev}{Overhead Efficiency Variance}.}
+\newglossaryentry{symb:oev}{
+  type=symbolslist,
+  name=OEV,
+  description={\symbdescoev},
+  sort=symboloev
+}
+
+%-----------------------------------------------------
+% OIV
+%-----------------------------------------------------
+\def\glosdescoiv{This is a 
+calculated value that describes the difference between the
+budget allowed based on \emph{actual} hours worked, multiplied
+with the \emph{budgeted} overhead rate. 
+
+As an \emph{actual}
+value, it is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012oiv}.}
+ 
+\begin{equation}
+  OIV = \left( \glslink{symb:aq}{AQ} - \glslink{symb:rsq}{RSQ} \right) \times
+             \glslink{symb:sp}{SP}_{fixed\:costs}
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and indicates the 
+amount of overhead that is under absorbed due to \emph{actual}
+hours being lower than \emph{budgeted} hours on which the
+calculation of the overhead rate was based. It is considered to be in the area of
+responsibility of the \emph{department manager}.
+\end{dangerous}
+}
+\newglossaryentry{glos:oiv}{
+  name=Overhead Idle Capacity Variance,
+  description={\glosdescoiv}
+}
+\def\symbdescoiv{See \glslink{glos:oiv}{Overhead Idle Capacity Variance}.}
+\newglossaryentry{symb:oiv}{
+  type=symbolslist,
+  name=OIV,
+  description={\symbdescoiv},
+  sort=symboloiv
+}
+
+
+%-----------------------------------------------------
+% OOV
+%-----------------------------------------------------
+\def\glosdescoov{Also called \emph{Net Factory Overhead Variance}. 
+An overall figure, it is considered to be in the responsibility of
+\emph{executive management} and is a 
+calculated value that describes the difference between the \emph{actual} 
+overhead and expenses incurred using the \emph{budgeted} overhead rate. 
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Averkamp:2012oov}.}
+ 
+\begin{equation}
+  OOV = \left( \glslink{symb:ap}{AP}_{overhead} + \glslink{symb:sp}{SP}_{fixed\:costs} \right) \times
+              \glslink{symb:ao}{AO} \times \glslink{symb:tpu}{Productivity} -
+              \glslink{symb:aq}{AQ} \times \glslink{symb:ap}{AP}
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically requires further
+analysis to guide management to solve the situation. In practice, this requires
+to look at the other overhead variances, such as \glslink{symb:ocv}{OCV},
+ \glslink{symb:ovv}{OVV} (two-variances method), but also  \glslink{symb:osv}{OSV},
+ \glslink{symb:oev}{OEV} and \glslink{symb:oiv}{OIV} (three-variances method)
+ to understand better the causes of the issues; using the \glslink{symb:osv}{OSV}
+ and  variable \glslink{symb:oev}{OEV} on one side and the fixed  \glslink{symb:oev}{OEV}
+ and   \glslink{symb:oiv}{OIV} (four-variances method), one splits the 
+  \glslink{symb:oev}{OEV}  into its fixed and variable components.
+\end{dangerous}
+}
+\newglossaryentry{glos:oov}{
+  name=Overall Overhead Variance,
+  description={\glosdescoov}
+}
+\def\symbdescoov{See \glslink{glos:oov}{Overall Overhead Variance}.}
+\newglossaryentry{symb:oov}{
+  type=symbolslist,
+  name=OOV,
+  description={\symbdescoov},
+  sort=symboloov
+}
+
+%-----------------------------------------------------
+% LCV
+%-----------------------------------------------------
+\def\glosdesclcv{This  is a 
+calculated value that describes the difference between the \emph{budgeted} cost
+for production and the \emph{actual} cost for production.  
+
+Comparing Labor costs with Material costs,
+LCV corresponds to \glslink{symb:mcv}{MCV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2012lcv}.}
+ 
+\begin{equation}
+  LCV = \left( \glslink{symb:rsq}{RSQ} \times \glslink{symb:sp}{SP}\right) - 
+              \left( \glslink{symb:aq}{AQ} \times \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically means that
+more hours are utilized than are allowed budgeted for, pointing to
+possibly inefficient use of labor time due to lack of automation
+or otherwise inefficient production methods (\glslink{glos:lev}{LEV})
+and possibly increased hourly charges \emph{actual} vs. \emph{budgeted}
+(\glslink{glos:lrv}{LRV}).   
+\end{dangerous}
+}
+\newglossaryentry{glos:lcv}{
+  name=Labor Cost Variance,
+  description={\glosdesclcv}
+}
+\def\symbdesclcv{See \glslink{glos:lcv}{Labor Cost Variance}.}
+\newglossaryentry{symb:lcv}{
+  type=symbolslist,
+  name=LCV,
+  description={\symbdesclcv},
+  sort=symbollcv
+}
+
+%-----------------------------------------------------
+% MCV
+%-----------------------------------------------------
+\def\glosdescmcv{This  is a 
+calculated value that describes the difference between the \emph{budgeted} cost
+for production and the \emph{actual} cost for production.  
+
+Comparing Labor costs with Material costs,
+MCV corresponds to \glslink{symb:lcv}{LCV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011mcv}.}
+ 
+\begin{equation}
+  MCV = \left( \glslink{symb:rsq}{RSQ} \times \glslink{symb:sp}{SP}\right) - 
+              \left( \glslink{symb:aq}{AQ} \times \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically means that
+more material is utilized than are allowed budgeted for, pointing to
+possibly inefficient use of material due to inefficient production 
+methods (\glslink{glos:muv}{MUV})
+and possibly increased material costs \emph{actual} vs. \emph{budgeted}
+(\glslink{glos:mpv}{MPV}).   
+\end{dangerous}
+}
+\newglossaryentry{glos:mcv}{
+  name=Material Cost Variance,
+  description={\glosdescmcv}
+}
+\def\symbdescmcv{See \glslink{glos:mcv}{Material Cost Variance}.}
+\newglossaryentry{symb:mcv}{
+  type=symbolslist,
+  name=MCV,
+  description={\symbdescmcv},
+  sort=symbolmcv
+}
+
+%-----------------------------------------------------
+% LRV
+%-----------------------------------------------------
+\def\glosdesclrv{This  is a 
+calculated value that describes the difference between the \emph{budgeted} cost
+and the \emph{actual} cost paid for the \emph{actual} number of hours.
+
+Comparing Labor costs with Material costs,
+LRV corresponds to \glslink{symb:mpv}{MPV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2012lrv}.}
+ 
+\begin{equation}
+  LRV =  \glslink{symb:aq}{AQ} \times 
+              \left( \glslink{symb:sp}{SP} - \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically points to
+increased \emph{actual} hourly rates compared to what was
+\emph{budgeted}.
+\end{dangerous}
+}
+\newglossaryentry{glos:lrv}{
+  name=Labor Rate Variance,
+  description={\glosdesclrv}
+}
+\def\symbdesclrv{See \glslink{glos:lrv}{Labor Rate Variance}.}
+\newglossaryentry{symb:lrv}{
+  type=symbolslist,
+  name=LRV,
+  description={\symbdesclrv},
+  sort=symbollrv
+}
+
+%-----------------------------------------------------
+% MPV
+%-----------------------------------------------------
+\def\glosdescmpv{This  is a 
+calculated value that describes the difference between the \emph{budgeted} cost
+and the \emph{actual} cost paid for the \emph{actual} material utilized.
+
+Comparing Labor costs with Material costs,
+MPV corresponds to \glslink{symb:lrv}{LRV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011mpv}.}
+ 
+\begin{equation}
+  MPV =  \glslink{symb:aq}{AQ} \times 
+              \left( \glslink{symb:sp}{SP} - \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically points to
+increased \emph{actual} price for material compared to what was
+\emph{budgeted}.
+\end{dangerous}
+}
+\newglossaryentry{glos:mpv}{
+  name=Material Price Variance,
+  description={\glosdescmpv}
+}
+\def\symbdescmpv{See \glslink{glos:mpv}{Material Price Variance}.}
+\newglossaryentry{symb:mpv}{
+  type=symbolslist,
+  name=MPV,
+  description={\symbdescmpv},
+  sort=symbolmpv
+}
+
+%-----------------------------------------------------
+% LEV
+%-----------------------------------------------------
+\def\glosdesclev{This  is a 
+calculated value that compares the \emph{actual} number of hours it took to
+create an actual output with the number of hours \emph{budgeted}
+for that output.      
+
+Comparing Labor costs with Material costs,
+LEV corresponds to \glslink{symb:muv}{MUV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011lev}.}
+ 
+\begin{equation}
+  LEV =  \glslink{symb:aq}{AQ} \times 
+              \left( \glslink{symb:sp}{SP} - \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically means that
+more hours are utilized than are allowed budgeted for, pointing to
+possibly inefficient use of labor time due to lack of automation
+or otherwise inefficient production methods.
+\end{dangerous}
+}
+\newglossaryentry{glos:lev}{
+  name=Labor Efficiency Variance,
+  description={\glosdesclev}
+}
+\def\symbdesclev{See \glslink{glos:lev}{Labor Efficiency Variance}.}
+\newglossaryentry{symb:lev}{
+  type=symbolslist,
+  name=LEV,
+  description={\symbdesclev},
+  sort=symbollev
+}
+
+%-----------------------------------------------------
+% MUV
+%-----------------------------------------------------
+\def\glosdescmuv{This  is a 
+calculated value that compares the \emph{actual} amount of material it took to
+create an actual output with the amoutn of material \emph{budgeted}
+for that output.      
+
+Comparing Labor costs with Material costs,
+MUV corresponds to \glslink{symb:lev}{LEV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011muv}.}
+ 
+\begin{equation}
+  MUV =  \glslink{symb:aq}{AQ} \times 
+              \left( \glslink{symb:sp}{SP} - \glslink{symb:ap}{AP}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically means that
+more material is utilized than are allowed budgeted for, pointing to
+possibly inefficient use of material due to inefficient production methods.
+\end{dangerous}
+}
+\newglossaryentry{glos:muv}{
+  name=Material Usage Variance,
+  description={\glosdescmuv}
+}
+\def\symbdescmuv{See \glslink{glos:muv}{Material Usage Variance}.}
+\newglossaryentry{symb:muv}{
+  type=symbolslist,
+  name=MUV,
+  description={\symbdescmuv},
+  sort=symbolmuv
+}
+
+%-----------------------------------------------------
+% LYV
+%-----------------------------------------------------
+\def\glosdesclyv{This  is a 
+calculated value that identifies the portion of the
+\glslink{glos:lev}{LEV} to obtain a favorable
+or unfavorable yield.
+
+Comparing Labor costs with Material costs,
+LYV corresponds to \glslink{symb:myv}{MYV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011lyv}.}
+ 
+\begin{equation}
+  LYV =  \glslink{symb:sp}{SP} \times 
+              \left( \glslink{symb:ao}{AO} - \glslink{symb:so}{SO}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically 
+points to inefficiencies---see \glslink{glos:lev}{LEV}---when
+creating a given output.
+\end{dangerous}
+}
+\newglossaryentry{glos:lyv}{
+  name=Labor Yield Variance,
+  description={\glosdesclyv}
+}
+\def\symbdesclyv{See \glslink{glos:lyv}{Labor Yield Variance}.}
+\newglossaryentry{symb:lyv}{
+  type=symbolslist,
+  name=LYV,
+  description={\symbdesclyv},
+  sort=symbollyv
+}
+
+%-----------------------------------------------------
+% MYV
+%-----------------------------------------------------
+\def\glosdescmyv{This  is a 
+calculated value that identifies the portion of the
+\glslink{glos:muv}{MUV} to obtain a favorable
+or unfavorable yield.
+
+Comparing Labor costs with Material costs,
+MYV corresponds to \glslink{symb:lyv}{LYV}.
+
+It is calculated as follows:\footnote{The calculation was
+derived from \cite{Poudel:2011myv}.}
+ 
+\begin{equation}
+  MYV =  \glslink{symb:sp}{SP} \times 
+              \left( \glslink{symb:ao}{AO} - \glslink{symb:so}{SO}\right)
+\end{equation}
+
+\begin{dangerous}
+A negative value is called \emph{unfavorable} and typically 
+points to inefficiencies---see \glslink{glos:muv}{MUV}---when
+creating a given output.
+\end{dangerous}
+}
+\newglossaryentry{glos:myv}{
+  name=Material Yield Variance,
+  description={\glosdescmyv}
+}
+\def\symbdescmyv{See \glslink{glos:myv}{Material Yield Variance}.}
+\newglossaryentry{symb:myv}{
+  type=symbolslist,
+  name=MYV,
+  description={\symbdescmyv},
+  sort=symbolmyv
+}
+
+
+
+
+
+
 
 
 

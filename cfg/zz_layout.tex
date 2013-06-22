@@ -66,7 +66,7 @@
 \else
 	\usepackage{tex4ht}
    \newcommand\vref{\ref}							% varioref doesn't work in HTML
-   \newcommand\textwidth{\linewidth}
+   \renewcommand\textwidth{\linewidth}
 \fi
 
 
@@ -102,6 +102,8 @@
 \usepackage[section,above] {placeins}			% Prevent floats floating past the section
 \usepackage{float}											% Improved control over floats
 \usepackage{booktabs}									% Better tables
+\usepackage{threeparttablex}  						% Footnotes in tables
+\usepackage{multicol}									% Multiple Columns
 \usepackage{adjustbox}								% Flexible boxes, color, rotate, etc.
 \usepackage{fancybox}									% Boxes, also for equations
 \usepackage{array}										% Better tabular and array environments
@@ -188,7 +190,6 @@
 
 \usepackage[flushmargin,hang]{footmisc}	% More footnote options
 
-
 %=====================================================
 % Hyperref
 %=====================================================
@@ -214,6 +215,7 @@
 \fi
 
 \usepackage{footnotebackref}
+\ifpdf\usepackage{tabu}\fi						% Nice tables
 
 %=====================================================
 % Massively ugly workaround of hyperrefs issues with equations in glossaries
@@ -369,7 +371,7 @@ section]         													% use section level for toc entries
 
 \usepackage{microtype}								% More precise typography
 \usepackage{fix-cm}										% Permit arbitrary font sizes
-\usepackage{eurosym}									% Euro Symbol
+\usepackage[right]{eurosym}		   			    % Euro Symbol
 
 %
 % Specify fonts for Captions, Sectionts, etc.
