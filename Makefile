@@ -160,7 +160,7 @@ init : check clean
 	#
 	# Register the project with local git server
 	#
-	if [ $$repository == "" ]; then \
+	if [ "$$repository" == "" ]; then \
     echo If you want to register the project with a different git server, use: ;\
     echo ;\
     echo make init repository=gitserver:remote_repository_name ;\
