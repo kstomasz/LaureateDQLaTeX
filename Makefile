@@ -158,6 +158,25 @@ init : check clean
 	if [[ $$response == "" || ! $$response =~ ^([yY][eE][sS]|[yY])$$ ]];  then echo no ; exit 1; fi;
 
 	#
+	# Register the project with local git server
+	#
+	if [ $$# -lt 1 ]; then \
+    echo If you want to register the project with a different git server, use: ;\
+    echo ;\
+    echo make init gitserver:remote_repository_name ;\
+    echo ;\
+    echo for example: ;\
+    echo ;\
+    echo make init git:MBA4/MBA4W1DQ1 ;\
+    echo ;\
+  else \
+    git remote rename origin upstream ;\
+    git remote add origin $$2 ;\
+    git push origin master ;\
+    git branch master --set-upstream-to origin/master ;\
+  fi;
+
+	#
 	# Parse directory name into .project
 	#
 	PROJ=$$(basename "$$(pwd)"); \
