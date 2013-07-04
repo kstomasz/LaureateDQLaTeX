@@ -171,7 +171,7 @@ init : check clean
     echo ;\
   else \
     git remote rename origin upstream ;\
-    git remote add origin $$2 ;\
+    git remote add origin $$repository ;\
     git push origin master ;\
     git branch master --set-upstream-to origin/master ;\
   fi;
