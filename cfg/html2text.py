@@ -816,7 +816,50 @@ def main():
     else:
         data = sys.stdin.read()
 
-    data = data.decode(encoding)
+    try:
+        data = data.decode(encoding)
+    except UnicodeDecodeError:
+        pass
+    try:
+        data = data.decode('utf-8')
+    except UnicodeDecodeError:
+        # OS X percent-encodes any bytes that aren't valid utf-8
+        s = ''
+        g = ''
+        l = 0
+        for c in data:
+            o = ord(c)
+            if l and o < 128 or o >= 192:
+                # we want a continuation byte, but didn't get one
+                s += ''.join(["%%%02X" % ord(x) for x in g])
+                g = ''
+                l = 0
+            if l == 0 and o < 128:
+                # ascii
+                s += c
+            elif l == 0 and 194 <= o < 245:
+                # valid leading bytes
+                if o < 224:
+                    l = 1
+                elif o < 240:
+                    l = 2
+                else:
+                    l = 3
+                g = c
+            elif l > 0 and 128 <= o < 192:
+                # valid continuations
+                g += c
+                l -= 1
+                if not l:
+                    s += g
+                    g = ''
+            else:
+                # invalid
+                s += "%%%02X" % o
+
+        # any remaining partial characters
+        s += ''.join(["%%%02X" % ord(x) for x in g])
+        data = s.decode('utf-8')
     h = HTML2Text(baseurl=baseurl)
     # handle options
     if options.ul_style_dash: h.ul_item_mark = '-'
