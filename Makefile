@@ -15,6 +15,7 @@
 
 TEXBIN=/usr/texbin/
 BIBFILE=../../../../Papers/Bibliography.bib
+FILELOC=~/Library/Application\ Support/DEVONthink\ Pro\ 2/Inbox
 
 #################################################
 # 
@@ -429,6 +430,28 @@ submit : check wc
   cp -a fig tmp >/dev/null 2>&1;\
   open tmp/document.html;\
   $(MAKE) totmp;
+
+
+#################################################
+# 
+# File
+#
+#################################################
+
+.PHONY: file
+file : check
+	$(MAKE) log msg="make file" LVL=info
+	if test -f document.pdf; then \
+    if test -d $(FILELOC); then \
+      if test -f .git/config; then \
+        cp -a document.pdf $(FILELOC)/$$(cat .git/config | grep git: | sed -e 's/.*\/\(.*\)/\1/g').pdf; \
+      fi; \
+    fi; \
+  else \
+    echo "document.pdf not found. make submit first."; \
+  fi;
+
+
 
 
 #################################################
