@@ -1,0 +1,135 @@
+%=====================================================
+% Chapter 99: Appendices
+%=====================================================
+
+%=====================================================
+% Appendix
+%=====================================================
+
+\mnequals{\doctype}{book}{
+  \appendix
+}{}
+
+%=====================================================
+% End Notes
+%=====================================================
+\mnequals{\shownotes}{true}{
+\phantomsection
+\ifthenelse{\equal{\doctype}{book}}{
+  \addcontentsline{toc}{chapter}{Notes}
+}{
+\addcontentsline{toc}{section}{Notes}
+}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape NOTES}
+\fancyhead[LO]{\slshape NOTES}
+\fancyfoot[C]{}
+%\theendnotes \setcounter{endnote}{0}
+\label{sec:notes}\printendnotes 
+%\setcounter{endnote}{0}
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+}{}
+
+
+%=====================================================
+% Acronyms and Symbols
+%=====================================================
+\mnequals{\showacronyms}{true}{
+\phantomsection
+%\addcontentsline{toc}{section}{Acronyms and Symbols}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape ACRONYMS AND SYMBOLS}
+\fancyhead[LO]{\slshape ACRONYMS AND SYMBOLS}
+\fancyfoot[C]{}
+%\printacronym
+%\printglossary[type=\acronymtype]
+%Print list of acronyms
+%\deftranslation[to=German]{Acronyms}{Abkuerzungsverzeichnis}
+\label{sec:acronyms}\printglossary[type=\acronymtype,style=long]
+%Print list of symbols
+\label{sec:symbols}\printglossary[type=symbolslist,style=long]
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+}{}
+
+
+%=====================================================
+% Glossary
+%=====================================================
+\mnequals{\showglossary}{true}{
+\phantomsection
+%\addcontentsline{toc}{section}{Glossary}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape GLOSSARY}
+\fancyhead[LO]{\slshape GLOSSARY}
+\fancyfoot[C]{}
+%\printglossary
+%\printglossary[type=main]
+\label{sec:glossary}\printglossary[style=altlist,title=Glossary]
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+}{}
+
+
+%=====================================================
+% Index
+%=====================================================
+\mnequals{\showindex}{true}{
+% Usage:
+% \index{Fourier Series}
+
+%
+% Index comes with a plain page style, we hack it here so that we have
+% the same pagestyle as everywhere else.
+% 
+\patchcmd{\theindex}% <cmd>
+  {\thispagestyle{plain}}% <search>
+  {\pagestyle{indexstyle}}% <replace>
+  {}{}%
+  \fancypagestyle{indexstyle}{%
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape INDEX}
+\fancyhead[LO]{\slshape INDEX}
+\fancyfoot[C]{}
+ }
+\renewcommand{\indexname}{Index}%
+
+% \phantomsection
+\addcontentsline{toc}{section}{Index}
+\thispagestyle{empty}
+\label{sec:index}\printindex
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+\clearpage
+}{}
+
+
+%=====================================================
+% References
+%=====================================================
+\mnequals{\showreferences}{true}{
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RE,RO]{\thepage}
+\fancyhead[LE]{\slshape REFERENCES}
+\fancyhead[LO]{\slshape REFERENCES}
+\fancyfoot[C]{}
+%\begin{thebibliography}{99}
+\patchcmd{\bibsetup}{\interlinepenalty=5000}{\interlinepenalty=10000}{}{}
+\label{sec:bibliography}\printbibliography
+%\end{thebibliography}
+%\clearpage{\pagestyle{empty}\cleardoublepage}
+%\clearpage
+}{}
+
+

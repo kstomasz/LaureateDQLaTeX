@@ -1,0 +1,101 @@
+%=====================================================
+% Listofs
+%=====================================================
+
+\mnequals{\showtoc}{true}{
+\phantomsection
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape TABLE OF CONTENTS}
+\fancyhead[RE]{\slshape TABLE OF CONTENTS}
+\fancyfoot[C]{}
+\mnequals{\doctype}{book}
+{
+  \addcontentsline{toc}{chapter}{Table of Contents}
+}
+{
+  \addcontentsline{toc}{section}{Table of Contents}
+}
+\pdfbookmark[-1]{\contentsname}{toc}
+\tableofcontents
+\mnequals{\doctype}{book}
+{
+  \clearpage{\pagestyle{empty}\cleardoublepage}
+}
+{
+  \clearpage
+}
+}{}
+\mnequals{\showlot}{true}{
+\phantomsection
+\mnequals{\doctype}{book}
+{
+  \addcontentsline{toc}{chapter}{List of Tables}
+}
+{
+  \addcontentsline{toc}{section}{List of Tables}
+}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape LIST OF TABLES}
+\fancyhead[RE]{\slshape LIST OF TABLES}
+\fancyfoot[C]{}
+\listoftables
+\mnequals{\doctype}{book}
+{
+  \clearpage{\pagestyle{empty}\cleardoublepage}
+}
+{
+  \clearpage
+}
+}{}
+\mnequals{\showlof}{true}{
+\phantomsection
+\mnequals{\doctype}{book}
+{
+  \addcontentsline{toc}{chapter}{List of Figures}
+}
+{
+  \addcontentsline{toc}{section}{List of Figures}
+}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape LIST OF FIGURES}
+\fancyhead[RE]{\slshape LIST OF FIGURES}
+\fancyfoot[C]{}
+\listoffigures
+\mnequals{\doctype}{book}
+{
+  \clearpage{\pagestyle{empty}\cleardoublepage}
+}
+{
+  \clearpage
+}
+}{}
+\mnequals{\showloe}{true}{
+\phantomsection
+\mnequals{\doctype}{book}
+{
+  \addcontentsline{toc}{chapter}{List of Exhibits}
+}
+{
+  \addcontentsline{toc}{section}{List of Exhibits}
+}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape LIST OF EXHIBITS}
+\fancyhead[RE]{\slshape LIST OF EXHIBITS}
+\fancyfoot[C]{}
+\listofexhibit
+\mnequals{\doctype}{book}
+{
+  \clearpage{\pagestyle{empty}\cleardoublepage}
+}
+{
+  \clearpage
+}
+}{}

@@ -1,0 +1,6 @@
+# Sample .gitignore file for Xcode Projects
+.DS_Store
+*.swp
+document.pdf
+tmp/*
+document.synctex.gz

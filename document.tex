@@ -1,0 +1,159 @@
+%=====================================================
+% Specify the document type (book, article)
+%=====================================================
+
+\newcommand{\doctype}{article}			% book or article
+
+%=====================================================
+% Specify part names (only for books)
+%=====================================================
+
+\newcommand\parta{Report}
+
+%=====================================================
+% Specify which frontmatter things you want
+%=====================================================
+
+\def\showlistofs{false}								% Any ``ListOfs?''
+\def\showtoc{true}										% Table of Contents
+\def\showlot{true}										% List of Tables
+\def\showlof{true}										% List of Figures
+\def\showloe{true}										% List of Exhibits
+\def\showlod{false}										% Include Distribution List
+\def\showmgmtsummary{false}				% Include Management Summary
+
+%=====================================================
+% Specify which appendices you want
+%=====================================================
+
+\def\showappendix{false}							% Show any Appendix?
+\def\shownotes{false}								% Notes
+\def\showacronyms{false}						% Acronyms and Symbols
+\def\showglossary{false}		  					% Glossary
+\def\showindex{false}			  					% Index
+\def\showreferences{true}			  				% References
+
+
+%=====================================================
+% Load the main layout file
+%=====================================================
+
+\input{cfg/zz_layout}
+
+%=====================================================
+% Configuration of the Bibliography.
+%
+% Has to be in the main document because of a limitation of TeXlipse
+%
+% http://sourceforge.net/projects/texlipse/forums/forum/451977/topic/4614646
+%=====================================================
+ 
+\usepackage[style=apa,citestyle=authoryear,backend=biber,maxnames=3,minnames=1,sorting=nyt,sortcites=true,block=space,safeinputenc,natbib=true,backref=true,uniquename=init]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+\addbibresource{Bibliography.bib}  
+\input{cfg/zz_config_bib}
+
+
+%=====================================================
+% Document Content
+%=====================================================
+%
+% Define here which chapters to include /only/
+%
+%\includeonly{00_titlepage,chapter_02,chapter_05}
+
+
+%=====================================================
+% Specify that we want an index 
+%=====================================================
+
+\mnequals{\showappendix}{true}{
+\mnequals{\showindex}{true}{\makeindex}
+}
+
+%=====================================================
+% Begin Document
+%=====================================================
+
+\begin{document}  
+  
+%=====================================================
+% Document Front Matter
+%=====================================================
+
+\scrollmode
+\mnequals{\doctype}{book}{
+\frontmatter
+}{}
+
+\include{00_titlepage}
+
+\mnequals{\doctype}{book}{
+  \pagenumbering{Roman}
+}{}  
+\mnequals{\showmgmtsummary}{true}{\input{cfg/zz_mgmtsummary}}{}
+\mnequals{\showlod}{true}{\input{cfg/zz_distribution}}{}
+\mnequals{\showlistofs}{true}{\input{cfg/zz_listofs}}{} 
+
+
+%=====================================================
+% Include Content
+%=====================================================
+
+\mnequals{\doctype}{book}{
+\mainmatter
+  \pagenumbering{arabic}
+  \part{\parta}\label{part:a}
+  \include{chapter_00}
+  \wcounta
+  \include{chapter_01}
+  \include{chapter_02}
+  \include{chapter_03}
+  \include{chapter_04}
+  \include{chapter_05}
+  \wcounte 
+  }{
+  \input{chapter_00} 
+  \wcounta 
+  \input{chapter_01}
+  \input{chapter_02}
+  \input{chapter_03}
+  \input{chapter_04}
+  \input{chapter_05}
+  \wcounte 
+}
+
+%=====================================================
+% Word Count
+%=====================================================
+
+%\bigskip \hfill \emph{\input{tmp/wc.tex}}\emph{Words} excluding front matter, exhibits, %notes and appendices.\bigskip
+
+
+%=====================================================
+% Include Appendices
+%=====================================================
+
+\mnequals{\showappendix}{true}{
+\input{chapter_a0_static}
+
+\makeatletter
+\mnequals{\doctype}{book}{
+\@openrightfalse
+\part{Appendix}
+ \appendix
+\input{cfg/zz_appendices} 
+\@openrighttrue
+\batchmode
+}{
+\input{cfg/zz_appendices} 
+}
+\makeatother
+\input{chapter_a4_static}
+}
+
+%=====================================================
+% End Document.
+%=====================================================
+
+\end{document}

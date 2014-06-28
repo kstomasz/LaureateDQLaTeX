@@ -1,0 +1,33 @@
+%=====================================================
+% Management Summary
+%=====================================================
+
+\phantomsection
+\mnequals{\doctype}{book}
+{
+  \chapter*{Management Summary\markboth{\slshape MANAGEMENT SUMMARY}{}}
+  \addcontentsline{toc}{chapter}{Management Summary}
+}
+{
+  \section*{Management Summary\markboth{\slshape MANAGEMENT SUMMARY}{}}
+  \addcontentsline{toc}{section}{Management Summary}
+}
+
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\thepage}
+\fancyhead[LO]{\slshape MANAGEMENT SUMMARY}
+\fancyhead[RE]{\slshape MANAGEMENT SUMMARY}
+\fancyfoot{\companyfooter}
+
+\input{01_mgmtsummary}
+
+
+\mnequals{\doctype}{book}
+{
+  \clearpage{\pagestyle{empty}\cleardoublepage}
+}
+{
+  \clearpage
+}
