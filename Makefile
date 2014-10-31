@@ -233,7 +233,8 @@ pdflatex : check
   if [ "$$remake" == "1" ] ; then $(MAKE) pdflatex; fi; \
   $(MAKE) totmp; \
   if [ -f $$DEST/document.pdf ]; then mv $$DEST/document.pdf . >/dev/null 2>&1; fi;\
-  if [ -f $$DEST/document.synctex.gz ]; then mv $$DEST/document.synctex.gz . >/dev/null 2>&1; fi;
+  if [ -f $$DEST/document.synctex.gz ]; then mv $$DEST/document.synctex.gz . >/dev/null 2>&1; fi;\
+  if [ -f $$DEST/document.log ]; then mv $$DEST/document.log . >/dev/null 2>&1; fi;
 
 
 #################################################
@@ -543,7 +544,7 @@ tex-files =	\
 	*.lg	\
         *.loe   \
 	*.lof	\
-	*.log	\
+	*.log   \
 	*.lot	\
 	*.mw	\
 	*.odt	\
