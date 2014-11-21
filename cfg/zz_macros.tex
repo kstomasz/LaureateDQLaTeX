@@ -67,16 +67,6 @@ to0pt{\hskip-
 \def\enddanger{\endgraf\endgroup}
 
 \newsavebox{\fmbox}
-\newenvironment{handright}
-{
- \begin{lrbox}{\fmbox}
- \begin{minipage}[t]{0.2cm}~\end{minipage}
- \begin{minipage}[t]{1.5cm}\hspace{\fill}\ding{45}\end{minipage}
- \vrule width 2pt \begin{minipage}[t]{0.1cm}~\end{minipage}
- \begin{minipage}[t]{10.8cm}
-}
-{\end{minipage}\end{lrbox}\usebox{\fmbox}
-}
 \newenvironment{notdangerous}
 {
  \begin{lrbox}{\fmbox}
