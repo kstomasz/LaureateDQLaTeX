@@ -14,7 +14,7 @@
 #################################################
 
 TEXBIN=/usr/texbin/
-BIBFILE=../../../../Papers/Bibliography.bib
+BIBFILE=../../../Papers/Bibliography.bib
 FILELOC=~/Library/Application\ Support/DEVONthink\ Pro\ 2/Inbox
 
 #################################################
